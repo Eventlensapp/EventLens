@@ -8,6 +8,7 @@ public static class SwaggerExtensions
     {
         services.AddSwaggerGen(options =>
         {
+            options.CustomSchemaIds(SchemaId);
             options.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "EventLens AI API",
@@ -32,5 +33,16 @@ public static class SwaggerExtensions
             });
         });
         return services;
+    }
+
+    private static string SchemaId(Type type)
+    {
+        if (type.IsArray) return $"{SchemaId(type.GetElementType()!)}Array";
+        if (!type.IsGenericType) return (type.FullName ?? type.Name).Replace('+', '.');
+
+        var definition = (type.GetGenericTypeDefinition().FullName ?? type.Name)
+            .Split('`')[0]
+            .Replace('+', '.');
+        return $"{definition}_{string.Join("_", type.GetGenericArguments().Select(SchemaId))}";
     }
 }

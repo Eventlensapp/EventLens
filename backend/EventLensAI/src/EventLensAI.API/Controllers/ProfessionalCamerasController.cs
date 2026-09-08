@@ -1,6 +1,6 @@
 using EventLensAI.Application.Common;using EventLensAI.Application.Features.Booth;using Microsoft.AspNetCore.Authorization;using Microsoft.AspNetCore.Mvc;
 namespace EventLensAI.API.Controllers;
-[ApiController,Authorize(Policy="StartBooth"),Route("api/booth/cameras")]
+[ApiController,Authorize(Policy="StartBooth"),Route("api/booth/professional-cameras")]
 public sealed class ProfessionalCamerasController(IProfessionalCameraService service,ICameraHealthService health):ControllerBase
 {
  [HttpGet("providers")]public ActionResult<ApiResponse<IReadOnlyList<CameraProviderDto>>>Providers()=>Ok(ApiResponse<IReadOnlyList<CameraProviderDto>>.Ok(service.Providers()));
