@@ -31,6 +31,7 @@ const navGroups = [
     { to: "/departments", label: "Departments", icon: "D" },
     { to: "/branches", label: "Branches", icon: "B" },
     { to: "/access", label: "Roles & access", icon: "◆" },
+    { to: "/roles", label: "Roles dashboard", icon: "R" },
     { to: "/crm", label: "Guest CRM", icon: "C" },
   ]},
   { label: "Brand & files", icon: "▣", items: [
@@ -48,7 +49,7 @@ const navGroups = [
 const mainPages = new Set([
   "/dashboard", "/organizations", "/events", "/event-types", "/event-templates",
   "/booth", "/camera", "/ai", "/editor", "/gallery", "/team", "/departments", "/branches",
-  "/access", "/crm", "/branding", "/storage", "/analytics",
+  "/access", "/roles", "/crm", "/branding", "/storage", "/analytics",
   "/organization/usage", "/organization/subscription", "/subscription",
 ]);
 

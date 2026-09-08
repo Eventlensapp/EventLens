@@ -35,6 +35,7 @@ import InvitationAccept from "./pages/InvitationAccept";
 import TeamRedirect from "./pages/TeamRedirect";
 import OrganizationSecurity from "./pages/OrganizationSecurity";
 import SecurityRedirect from "./pages/SecurityRedirect";
+import RolesDashboard from "./pages/RolesDashboard";
 import OrganizationDepartments from "./pages/OrganizationDepartments";
 import OrganizationBranches from "./pages/OrganizationBranches";
 import StructureRedirect from "./pages/StructureRedirect";
@@ -131,6 +132,7 @@ export default function App() {
         <Route path="/organization/subscription" element={<Protected><OrganizationSubscriptionPage /></Protected>} />
         <Route path="/organization/usage" element={<Protected><OrganizationUsagePage /></Protected>} />
         <Route path="/access" element={<Protected><SecurityRedirect /></Protected>} />
+        <Route path="/roles" element={<Protected><RolesDashboard /></Protected>} />
         <Route path="/crm" element={<Protected><Suspense fallback={<main className="editor-loading">Loading CRM…</main>}><CRM /></Suspense></Protected>} />
         <Route path="/analytics" element={<Protected><Suspense fallback={<main className="editor-loading">Loading analytics…</main>}><AnalyticsDashboard /></Suspense></Protected>} />
         <Route path="/subscription" element={<Protected><Suspense fallback={<main className="editor-loading">Loading billing…</main>}><BillingPortal view="subscription" /></Suspense></Protected>} />
