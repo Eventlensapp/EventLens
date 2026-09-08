@@ -1,0 +1,11 @@
+using EventLensAI.Domain.Enums;
+namespace EventLensAI.Application.DTOs.Events;
+public sealed record EventBrandDto(Guid EventId,Guid?BrandProfileId,Guid?LogoAssetId,Guid?BackgroundAssetId,Guid?WatermarkAssetId,string?EventDisplayName,string PrimaryColor,string SecondaryColor,string AccentColor,string FontFamily,EventThemeMode ThemeMode,string?ThemeOverridesJson,bool InheritsOrganizationBrand);
+public sealed record UpdateEventBrandRequest(Guid?BrandProfileId,Guid?LogoAssetId,Guid?BackgroundAssetId,Guid?WatermarkAssetId,string?EventDisplayName,string?PrimaryColor,string?SecondaryColor,string?AccentColor,string?FontFamily,EventThemeMode ThemeMode,string?ThemeOverridesJson);
+public sealed record EventExperienceDto(Guid EventId,string?WelcomeTitle,string?WelcomeMessage,Guid?WelcomeImageAssetId,string?CaptureMessage,string?CompletionMessage,string?GalleryTitle,string?GalleryDescription,bool EnableDownload,bool EnableSharing,string ConfigurationJson);
+public sealed record UpdateExperienceRequest(string?WelcomeTitle,string?WelcomeMessage,Guid?WelcomeImageAssetId,string?CaptureMessage,string?CompletionMessage,string?GalleryTitle,string?GalleryDescription,bool EnableDownload,bool EnableSharing,string ConfigurationJson);
+public sealed record EventAssetDto(Guid Id,Guid EventId,string StorageAssetId,string Url,EventAssetType AssetType,string DisplayName,string ContentType,long FileSize,int DisplayOrder,bool IsActive);
+public sealed record EventAssetUpload(EventAssetType AssetType,string DisplayName,int DisplayOrder,string FileName,string ContentType,long Length,Stream Content);
+public sealed record SponsorDto(Guid Id,Guid EventId,string Name,Guid LogoAssetId,string?Website,int DisplayOrder,bool IsActive);
+public sealed record CreateSponsorRequest(string Name,Guid LogoAssetId,string?Website,int DisplayOrder);
+public sealed record UpdateSponsorRequest(string Name,Guid LogoAssetId,string?Website,int DisplayOrder,bool IsActive);

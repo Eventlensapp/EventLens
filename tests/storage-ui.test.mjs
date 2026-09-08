@@ -1,0 +1,5 @@
+import test from"node:test";import assert from"node:assert/strict";import{readFileSync}from"node:fs";const read=p=>readFileSync(new URL(`../${p}`,import.meta.url),"utf8");
+test("storage explorer supports search filters and views",()=>{const x=read("app/features/storage/StorageWorkspace.tsx");for(const v of["Search filename","All categories","All folders","Grid","List"])assert.ok(x.includes(v))});
+test("storage upload supports drag drop and multiple files",()=>{const x=read("app/features/storage/StorageWorkspace.tsx");assert.match(x,/onDrop=/);assert.match(x,/multiple/);assert.match(x,/storageApi\.upload/)});
+test("trash supports restoring files",()=>{const x=read("app/features/storage/StorageWorkspace.tsx");assert.match(x,/storageApi\.restore/);assert.match(x,/Trash is empty/)});
+test("all storage routes are registered",()=>{const x=read("app/App.tsx");for(const v of['"/storage"','"/storage/files"','"/storage/folders"','"/storage/uploads"','"/storage/trash"'])assert.ok(x.includes(v))});

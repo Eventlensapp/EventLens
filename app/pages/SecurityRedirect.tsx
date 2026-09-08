@@ -1,0 +1,1 @@
+"use client";import{Navigate}from"react-router-dom";import{useAppStore}from"../store/useAppStore";export default function SecurityRedirect(){const id=useAppStore(s=>s.activeOrganizationId);return <Navigate to={id?`/organizations/${id}/security`:"/organizations"} replace/>}

@@ -1,0 +1,4 @@
+import test from"node:test";import assert from"node:assert/strict";import{readFile}from"node:fs/promises";const root=new URL("../",import.meta.url),read=p=>readFile(new URL(p,root),"utf8");
+test("Phase 3 routes are registered",async()=>{const app=await read("app/App.tsx");for(const x of["branding","experience","assets","sponsors"])assert.ok(app.includes(`/events/:id/${x}`))});
+test("brand and experience editors have live preview",async()=>{const x=await read("app/pages/EventExperienceWorkspace.tsx");assert.match(x,/LivePreview/);assert.match(x,/Welcome/);assert.match(x,/Booth/);assert.match(x,/Gallery/);assert.match(x,/Sharing/)});
+test("asset uploads and sponsors use scoped APIs",async()=>{const x=await read("app/features/events/experienceApi.ts");assert.match(x,/FormData/);assert.match(x,/\/assets/);assert.match(x,/\/sponsors/)});

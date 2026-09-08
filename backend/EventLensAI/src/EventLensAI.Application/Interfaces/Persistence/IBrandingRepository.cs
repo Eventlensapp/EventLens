@@ -1,0 +1,3 @@
+using EventLensAI.Domain.Entities;
+namespace EventLensAI.Application.Interfaces.Persistence;
+public interface IBrandingRepository{Task<BrandKit?>GetKitAsync(Guid organizationId,CancellationToken ct);Task AddKitAsync(BrandKit kit,CancellationToken ct);Task<IReadOnlyList<BrandAsset>>ListAssetsAsync(Guid organizationId,CancellationToken ct);Task<BrandAsset?>GetAssetAsync(Guid id,CancellationToken ct);Task AddAssetAsync(BrandAsset asset,CancellationToken ct);Task<IReadOnlyList<BrandTheme>>ListThemesAsync(Guid organizationId,CancellationToken ct);Task<BrandTheme?>GetThemeAsync(Guid id,CancellationToken ct);Task<bool>ThemeNameExistsAsync(Guid organizationId,string name,Guid?exceptId,CancellationToken ct);Task AddThemeAsync(BrandTheme theme,CancellationToken ct);}

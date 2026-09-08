@@ -1,0 +1,3 @@
+export type SessionType="Guest"|"Operator"|"Test";export type SessionStatus="Created"|"Initializing"|"Active"|"Paused"|"Completed"|"Expired"|"Cancelled"|"Error";
+export type BoothSession={sessionId:string;organizationId:string;eventId:string;boothId:string;sessionToken:string;sessionType:SessionType;status:SessionStatus;startedAt:string;endedAt?:string;lastActivityAt:string;guestName?:string;metadataJson:string};
+export type RuntimeState={organizationId:string;state:"Idle"|"Preparing"|"Ready"|"Active"|"Paused"|"Completing"|"Maintenance"|"Offline"|"Error";sessionId?:string;reason?:string;changedAt:string};

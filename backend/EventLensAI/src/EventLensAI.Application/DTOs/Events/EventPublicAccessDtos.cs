@@ -1,0 +1,12 @@
+using EventLensAI.Domain.Enums;
+namespace EventLensAI.Application.DTOs.Events;
+public sealed record QRCodeCustomizationRequest(string?LogoUrl,string PrimaryColor,string BackgroundColor,string FrameStyle,string CaptionText);
+public sealed record CreateQRCodeRequest(EventQRCodeType QRType,QRCodeCustomizationRequest Customization,DateTime?ExpiresAt);
+public sealed record UpdateQRCodeRequest(QRCodeCustomizationRequest Customization,DateTime?ExpiresAt,bool IsActive);
+public sealed record QRCodeDto(Guid Id,EventQRCodeType QRType,string PublicUrl,string ImageUrl,QRCodeCustomizationRequest Customization,DateTime?ExpiresAt,bool IsActive,DateTime CreatedAt);
+public sealed record EventAccessSettingDto(bool IsPublicEnabled,bool RequirePassword,bool AllowGuestAccess,bool AllowGalleryAccess,bool AllowDownloads,bool AllowSharing,DateTime?ExpiryDate);
+public sealed record UpdateEventAccessSettingRequest(bool IsPublicEnabled,bool RequirePassword,string?Password,bool AllowGuestAccess,bool AllowGalleryAccess,bool AllowDownloads,bool AllowSharing,DateTime?ExpiryDate);
+public sealed record PublicScheduleItemDto(string Title,string?VenueName,DateTime StartDateTime,DateTime EndDateTime);
+public sealed record PublicEventDto(string Name,string?LogoUrl,string?CoverImageUrl,string?WelcomeTitle,string?WelcomeMessage,string?Venue,string?Address,DateTime StartDate,DateTime EndDate,string PrimaryColor,string SecondaryColor,string AccentColor,string FontFamily,bool AllowGuestAccess,bool GalleryAvailable,bool DownloadsAvailable,bool SharingAvailable,IReadOnlyList<PublicScheduleItemDto>Schedule);
+public sealed record GuestSessionDto(string SessionToken,DateTime StartedAt,DateTime LastActivityAt);
+public sealed record AccessAnalyticsDto(int QrScans,int PageViews,int Sessions,int UniqueSessions,IReadOnlyDictionary<string,int>Devices);

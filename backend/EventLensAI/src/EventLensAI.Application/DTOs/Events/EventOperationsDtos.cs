@@ -1,0 +1,10 @@
+using EventLensAI.Domain.Enums;namespace EventLensAI.Application.DTOs.Events;
+public sealed record OperationTypeDto(Guid Id,string Name,string?Description,bool IsSystemType);
+public sealed record VenueDto(Guid Id,Guid EventId,Guid VenueTypeId,string VenueTypeName,string Name,string?Description,string?AddressLine,string?City,string?State,string?Country,string?PostalCode,decimal?Latitude,decimal?Longitude,string?MapProviderReference,string?ContactPerson,string?ContactPhone,string?ContactEmail,int?Capacity,bool IsPrimary,bool IsDeleted);
+public sealed record CreateVenueRequest(Guid VenueTypeId,string Name,string?Description,string?AddressLine,string?City,string?State,string?Country,string?PostalCode,decimal?Latitude,decimal?Longitude,string?MapProviderReference,string?ContactPerson,string?ContactPhone,string?ContactEmail,int?Capacity,bool IsPrimary);
+public sealed record UpdateVenueRequest(Guid VenueTypeId,string Name,string?Description,string?AddressLine,string?City,string?State,string?Country,string?PostalCode,decimal?Latitude,decimal?Longitude,string?MapProviderReference,string?ContactPerson,string?ContactPhone,string?ContactEmail,int?Capacity,bool IsPrimary);
+public sealed record ScheduleDto(Guid Id,Guid EventId,Guid?VenueId,string?VenueName,Guid ScheduleTypeId,string ScheduleTypeName,string Title,string?Description,DateTime StartDateTime,DateTime EndDateTime,EventScheduleStatus Status,int DisplayOrder);
+public sealed record CreateScheduleRequest(Guid?VenueId,Guid ScheduleTypeId,string Title,string?Description,DateTime StartDateTime,DateTime EndDateTime,EventScheduleStatus Status,int DisplayOrder);
+public sealed record UpdateScheduleRequest(Guid?VenueId,Guid ScheduleTypeId,string Title,string?Description,DateTime StartDateTime,DateTime EndDateTime,EventScheduleStatus Status,int DisplayOrder);
+public sealed record ReorderScheduleRequest(IReadOnlyList<Guid> ItemIds);
+public sealed record CalendarEntryDto(Guid Id,string Title,DateTime Start,DateTime End,string?Venue,string Status);

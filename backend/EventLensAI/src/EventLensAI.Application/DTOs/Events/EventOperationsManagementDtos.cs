@@ -1,0 +1,15 @@
+using EventLensAI.Domain.Enums;namespace EventLensAI.Application.DTOs.Events;
+public sealed record ChecklistDto(Guid Id,Guid ChecklistId,Guid EventId,string Title,string?Description,string Category,Guid?AssignedUserId,string?AssignedUserName,DateTime?DueDate,ChecklistPriority Priority,ChecklistItemStatus Status,Guid?CompletedBy,DateTime?CompletedAt,int DisplayOrder);
+public sealed record CreateChecklistItemRequest(string Title,string?Description,string Category,Guid?AssignedUserId,DateTime?DueDate,ChecklistPriority Priority,int DisplayOrder);
+public sealed record UpdateChecklistItemRequest(string Title,string?Description,string Category,Guid?AssignedUserId,DateTime?DueDate,ChecklistPriority Priority,ChecklistItemStatus Status,int DisplayOrder);
+public sealed record ReadinessDashboardDto(int Score,int TotalTasks,int CompletedTasks,int PendingTasks,int BlockedTasks,int CriticalIssues,int AssignedStaff,int ReadyBooths);
+public sealed record StaffAssignmentDto(Guid Id,Guid EventId,Guid UserId,string UserName,EventStaffRole Role,DateTime StartDateTime,DateTime EndDateTime,StaffAssignmentStatus Status,string?Notes);
+public sealed record CreateStaffAssignmentRequest(Guid UserId,EventStaffRole Role,DateTime StartDateTime,DateTime EndDateTime,string?Notes);
+public sealed record UpdateStaffAssignmentRequest(EventStaffRole Role,DateTime StartDateTime,DateTime EndDateTime,StaffAssignmentStatus Status,string?Notes);
+public sealed record EventZoneDto(Guid Id,Guid VenueId,string VenueName,string Name,string?Description,string?Floor,int?Capacity);
+public sealed record CreateEventZoneRequest(Guid VenueId,string Name,string?Description,string?Floor,int?Capacity);
+public sealed record UpdateEventZoneRequest(string Name,string?Description,string?Floor,int?Capacity);
+public sealed record BoothPlacementDto(Guid Id,Guid EventId,Guid VenueId,string VenueName,Guid ZoneId,string ZoneName,string Name,string?Description,string?PositionNotes,Guid?AssignedOperatorId,string?AssignedOperatorName,BoothPlacementStatus Status);
+public sealed record CreateBoothPlacementRequest(Guid VenueId,Guid ZoneId,string Name,string?Description,string?PositionNotes,Guid?AssignedOperatorId,BoothPlacementStatus Status);
+public sealed record UpdateBoothPlacementRequest(Guid VenueId,Guid ZoneId,string Name,string?Description,string?PositionNotes,Guid?AssignedOperatorId,BoothPlacementStatus Status);
+public sealed record NotificationDto(Guid Id,Guid OrganizationId,Guid UserId,Guid?EventId,string Title,string Message,EventNotificationType Type,bool IsRead,DateTime CreatedAt);

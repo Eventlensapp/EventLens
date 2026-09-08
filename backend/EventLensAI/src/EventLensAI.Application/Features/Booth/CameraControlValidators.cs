@@ -1,0 +1,6 @@
+using FluentValidation;
+namespace EventLensAI.Application.Features.Booth;
+public sealed class UpdateCameraControlSettingsRequestValidator:AbstractValidator<UpdateCameraControlSettingsRequest>
+{public UpdateCameraControlSettingsRequestValidator(){RuleFor(x=>x.OrganizationId).NotEmpty();RuleFor(x=>x.Resolution).Matches(@"^\d{3,5}x\d{3,5}$");RuleFor(x=>x.FocusMode).Must(x=>new[]{"continuous","manual"}.Contains(x));RuleFor(x=>x.Contrast).Must(x=>new[]{"Low","Medium","High"}.Contains(x));RuleFor(x=>x.WhiteBalance).Must(x=>new[]{"Auto","Daylight","Cloudy","Fluorescent","Incandescent"}.Contains(x));RuleFor(x=>x.TorchMode).Must(x=>new[]{"Off","On","Auto"}.Contains(x));RuleFor(x=>x.FrameRate).InclusiveBetween(1,120).When(x=>x.FrameRate.HasValue);}}
+public sealed class CreateCameraProfileRequestValidator:AbstractValidator<CreateCameraProfileRequest>
+{public CreateCameraProfileRequestValidator(){RuleFor(x=>x.OrganizationId).NotEmpty();RuleFor(x=>x.Name).NotEmpty().MaximumLength(100);RuleFor(x=>x.CameraType).Must(x=>new[]{"Browser","DSLRAdapter","MirrorlessAdapter"}.Contains(x));RuleFor(x=>x.Resolution).Matches(@"^\d{3,5}x\d{3,5}$");RuleFor(x=>x.Contrast).Must(x=>new[]{"Low","Medium","High"}.Contains(x));RuleFor(x=>x.WhiteBalance).Must(x=>new[]{"Auto","Daylight","Cloudy","Fluorescent","Incandescent"}.Contains(x));}}

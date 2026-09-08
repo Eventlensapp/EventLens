@@ -1,0 +1,4 @@
+import{HubConnectionBuilder,LogLevel}from"@microsoft/signalr";
+import{useEffect}from"react";import{useQueryClient}from"@tanstack/react-query";
+import{apiOrigin,storageKeys}from"../../lib/api";
+export function useAIJobsSignalR(eventId?:string){const client=useQueryClient();useEffect(()=>{if(!eventId)return;const connection=new HubConnectionBuilder().withUrl(`${apiOrigin()}/hubs/ai-jobs`,{accessTokenFactory:()=>localStorage.getItem(storageKeys.accessToken)??""}).withAutomaticReconnect().configureLogging(LogLevel.Warning).build();const refresh=()=>client.invalidateQueries({queryKey:["ai-jobs"]});connection.on("JobStarted",refresh);connection.on("JobProgress",refresh);connection.on("JobCompleted",refresh);connection.on("JobFailed",refresh);void connection.start().then(()=>connection.invoke("SubscribeToEvent",eventId));return()=>{void connection.stop()}},[eventId,client])}

@@ -1,0 +1,3 @@
+export type CameraSettings={organizationId:string;resolution:string;zoom:number|null;focusMode:string;focus:number|null;exposure:number|null;exposureCompensation:number|null;brightness:number|null;contrast:string;whiteBalance:string;torchMode:string;frameRate:number|null};
+export type CameraProfile={id:string;organizationId:string;name:string;cameraType:string;resolution:string;zoom:number|null;focus:number|null;exposure:number|null;brightness:number|null;contrast:string;whiteBalance:string;torchEnabled:boolean;createdAt:string;updatedAt?:string};
+export type RuntimeCapability={name:string;supported:boolean;currentValue?:number;minimum?:number;maximum?:number;step?:number;values:string[]};

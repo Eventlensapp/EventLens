@@ -1,0 +1,5 @@
+import type{AnalyticsFilter,ChartData,DashboardMetrics}from"./types";
+import{apiDownload,apiOrigin,apiRequest}from"../../lib/api";
+const query=(f:AnalyticsFilter)=>new URLSearchParams(Object.entries(f).filter(([,v])=>v).map(([k,v])=>[k,String(v)])).toString();
+export const analyticsKeys={all:["analytics"]as const,dashboard:(f:AnalyticsFilter)=>["analytics","dashboard",f]as const,charts:(f:AnalyticsFilter)=>["analytics","charts",f]as const};
+export const analyticsApi={origin:apiOrigin,dashboard:(f:AnalyticsFilter)=>apiRequest<DashboardMetrics>(`/api/analytics/dashboard?${query(f)}`),charts:(f:AnalyticsFilter)=>apiRequest<ChartData[]>(`/api/analytics/charts?${query(f)}`),export:(f:AnalyticsFilter,format:"Csv"|"Excel"|"Pdf")=>apiDownload("/api/analytics/reports/export",{method:"POST",body:JSON.stringify({...f,from:f.from??new Date(Date.now()-2592e6).toISOString(),to:f.to??new Date().toISOString(),period:"Custom",format})},`eventlens-report.${format==="Excel"?"xls":format.toLowerCase()}`)};

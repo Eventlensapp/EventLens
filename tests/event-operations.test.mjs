@@ -1,0 +1,4 @@
+import test from"node:test";import assert from"node:assert/strict";import{readFile}from"node:fs/promises";const root=new URL("../",import.meta.url),read=p=>readFile(new URL(p,root),"utf8");
+test("venue and schedule pages are routed",async()=>{const x=await read("app/App.tsx");assert.ok(x.includes("/events/:id/venue"));assert.ok(x.includes("/events/:id/schedule"))});
+test("venue management connects CRUD and type catalog",async()=>{const x=await read("app/features/events/operationsApi.ts");for(const s of["venueTypes","createVenue","updateVenue","archiveVenue","restoreVenue"])assert.ok(x.includes(s))});
+test("schedule renders timeline and calendar foundations",async()=>{const x=await read("app/pages/EventOperations.tsx");assert.match(x,/Timeline/);assert.match(x,/Calendar/);assert.match(x,/scheduleSubmit/)});

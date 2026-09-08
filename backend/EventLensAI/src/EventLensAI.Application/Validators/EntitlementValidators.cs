@@ -1,0 +1,5 @@
+using EventLensAI.Application.Features.Entitlements;using FluentValidation;
+namespace EventLensAI.Application.Validators;
+public sealed class SaveEntitlementPlanRequestValidator:AbstractValidator<SaveEntitlementPlanRequest>{public SaveEntitlementPlanRequestValidator(){RuleFor(x=>x.Name).NotEmpty().MaximumLength(100);RuleFor(x=>x.Description).NotEmpty().MaximumLength(1000);RuleFor(x=>x.MonthlyPrice).GreaterThanOrEqualTo(0);RuleFor(x=>x.YearlyPrice).GreaterThanOrEqualTo(0);RuleFor(x=>x.DisplayOrder).GreaterThan(0);RuleFor(x=>x.MaximumStorage).GreaterThanOrEqualTo(-1);}}
+public sealed class ChangeEntitlementPlanRequestValidator:AbstractValidator<ChangeEntitlementPlanRequest>{public ChangeEntitlementPlanRequestValidator(){RuleFor(x=>x.PlanId).NotEmpty();RuleFor(x=>x.TrialDays).InclusiveBetween(1,365).When(x=>x.TrialDays.HasValue);}}
+public sealed class TrackUsageRequestValidator:AbstractValidator<TrackUsageRequest>{public TrackUsageRequestValidator(){RuleFor(x=>x.Quantity).GreaterThan(0);RuleFor(x=>x.Reference).MaximumLength(200);}}

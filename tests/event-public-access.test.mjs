@@ -1,0 +1,6 @@
+import test from"node:test";import assert from"node:assert/strict";import{readFileSync}from"node:fs";
+const admin=readFileSync("app/pages/EventPublicAccessAdmin.tsx","utf8"),guest=readFileSync("app/pages/PublicEvent.tsx","utf8"),api=readFileSync("app/features/events/publicAccessApi.ts","utf8"),routes=readFileSync("app/App.tsx","utf8"),css=readFileSync("app/globals.css","utf8");
+test("QR administration supports generation preview download and archive",()=>{for(const x of["Generate secure QR","QR codes","Download SVG","deleteQr"])assert.match(admin,new RegExp(x));assert.match(api,/createQr/)});
+test("public access settings and analytics are connected",()=>{for(const x of["QR scans","Page views","Guest access policy","saveSettings"])assert.match(admin,new RegExp(x));assert.match(api,/access-analytics/)});
+test("guest page applies branding and starts anonymous session",()=>{for(const x of["primaryColor","coverImageUrl","Start Experience","sessionStorage"])assert.match(guest,new RegExp(x));assert.match(api,/X-Event-Password/)});
+test("public experience is mobile responsive and does not require Protected route",()=>{assert.ok(routes.includes('path="/e/:token" element={<PublicEvent'));assert.ok(css.includes("@media(max-width:750px)"));assert.match(css,/public-event/)});

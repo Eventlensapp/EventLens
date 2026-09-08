@@ -1,0 +1,5 @@
+import{create}from"zustand";import type{BoothSession,RuntimeState}from"./types";
+const tokenKey="eventlens_booth_restore_token";
+type State={session:BoothSession|null;runtime:RuntimeState|null;idle:boolean;lastActivity:number;timeoutSeconds:number;recovery:BoothSession|null;setSession:(s:BoothSession|null)=>void;setRuntime:(s:RuntimeState)=>void;touch:()=>void;setIdle:(v:boolean)=>void;setRecovery:(s:BoothSession|null)=>void;clear:()=>void};
+export const useSessionEngineStore=create<State>(set=>({session:null,runtime:null,idle:true,lastActivity:Date.now(),timeoutSeconds:60,recovery:null,setSession:session=>{if(session?.sessionToken)localStorage.setItem(tokenKey,session.sessionToken);set({session,idle:!session,lastActivity:Date.now()})},setRuntime:runtime=>set({runtime}),touch:()=>set({lastActivity:Date.now(),idle:false}),setIdle:idle=>set({idle}),setRecovery:recovery=>set({recovery}),clear:()=>{localStorage.removeItem(tokenKey);set({session:null,recovery:null,idle:true,lastActivity:Date.now()})}}));
+export const restoreSessionToken=()=>localStorage.getItem(tokenKey);

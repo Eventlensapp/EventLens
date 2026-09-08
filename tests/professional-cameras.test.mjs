@@ -1,0 +1,5 @@
+import test from"node:test";import assert from"node:assert/strict";import fs from"node:fs";const app=fs.readFileSync("app/App.tsx","utf8"),page=fs.readFileSync("app/pages/ProfessionalCameras.tsx","utf8"),api=fs.readFileSync("app/features/professional-cameras/api.ts","utf8"),types=fs.readFileSync("app/features/professional-cameras/types.ts","utf8");
+test("provider selection lists browser and future professional providers",()=>{assert.match(app,/booth\/professional-cameras/);for(const x of["Browser","Canon","Nikon","Sony","GenericDSLR","GenericMirrorless"])assert.match(page+api+types,new RegExp(x))});
+test("camera connection and recovery flow are wired",()=>{for(const x of["connect","disconnect","status","capabilities"])assert.match(api,new RegExp(`${x}:`));assert.match(page,/Recovery/);assert.match(page,/Connect/)});
+test("status and health display are present",()=>{for(const x of["Connection","Provider","Last communication","No active errors"])assert.match(page,new RegExp(x))});
+test("serial number is protected and never rendered from response",()=>{assert.match(page,/type="password"/);assert.doesNotMatch(page,/c\\.serialNumber|selected\\.serialNumber/)});

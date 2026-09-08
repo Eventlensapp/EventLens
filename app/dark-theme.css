@@ -1,0 +1,258 @@
+/* Theme bridge for feature modules added after the original application shell. */
+.app.dark {
+  --card: #121217;
+  --surface-raised: #17171e;
+  --surface-soft: #1c1b24;
+  --input-bg: #0d0d12;
+  --input-border: rgba(255, 255, 255, .12);
+  --text-soft: #c6c4ce;
+  --shadow-card: 0 18px 48px rgba(0, 0, 0, .22);
+  color-scheme: dark;
+}
+
+.app.light {
+  --card: #fff;
+  --surface-raised: #f9f8fc;
+  --surface-soft: #f0eef6;
+  --input-bg: #fff;
+  --input-border: rgba(20, 16, 30, .14);
+  --text-soft: #5f5c68;
+  --shadow-card: 0 14px 38px rgba(26, 20, 45, .07);
+  color-scheme: light;
+}
+
+.app :is(input, select, textarea) {
+  color: var(--text);
+  caret-color: var(--purple);
+}
+
+.app.dark :is(
+  .top-actions select,
+  .event-modal select,
+  .event-modal textarea,
+  .event-filters input,
+  .event-filters select,
+  .event-core-form input,
+  .event-core-form select,
+  .event-core-form textarea,
+  .template-editor input,
+  .template-editor select,
+  .template-editor textarea,
+  .creative-workspace input,
+  .creative-workspace select,
+  .creative-workspace textarea,
+  .sponsor-form input,
+  .sponsor-form select,
+  .analytics-toolbar input,
+  .storage-tools input,
+  .storage-tools select,
+  .drop-zone select,
+  .asset-upload input,
+  .asset-upload select,
+  .operations-inline-form input,
+  .operations-inline-form select,
+  .placement-forms input,
+  .placement-forms select,
+  .qr-generator input,
+  .qr-generator select,
+  .access-settings input
+) {
+  border-color: var(--input-border);
+  background: var(--input-bg);
+  color: var(--text);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .025);
+}
+
+.app.dark :is(input, select, textarea)::placeholder { color: #686673; opacity: 1; }
+.app.dark :is(input, select, textarea):focus {
+  border-color: color-mix(in srgb, var(--purple) 68%, transparent);
+  outline: 3px solid color-mix(in srgb, var(--purple) 13%, transparent);
+}
+.app.dark select option { background: #17171e; color: #f8f8fb; }
+
+.app.dark :is(
+  .billing-plans article,
+  .usage-grid article,
+  .crm-metrics article,
+  .crm-grid article,
+  .analytics-kpis article,
+  .analytics-charts article,
+  .event-card-grid article,
+  .event-empty,
+  .template-grid > article,
+  .template-grid > button,
+  .event-type-grid article,
+  .venue-grid article,
+  .operation-stats article,
+  .operations-board article,
+  .task-board article,
+  .placement-grid article,
+  .staff-calendar article,
+  .placement-forms form,
+  .qr-generator section,
+  .access-settings,
+  .qr-card-grid article,
+  .folder-grid article,
+  .file-explorer article,
+  .asset-grid article,
+  .theme-grid article,
+  .calendar-foundation > section,
+  .template-editor section,
+  .template-editor aside,
+  .template-review,
+  .creative-workspace > form,
+  .asset-drop,
+  .sponsor-form
+) {
+  border-color: var(--line);
+  background: var(--card);
+  color: var(--text);
+  box-shadow: var(--shadow-card);
+}
+
+.app.dark :is(
+  .billing-plans article,
+  .usage-grid article,
+  .event-card-grid article,
+  .venue-grid article,
+  .operation-stats article,
+  .task-board article,
+  .placement-grid article,
+  .qr-card-grid article,
+  .folder-grid article,
+  .file-explorer article,
+  .asset-grid article,
+  .theme-grid article
+) {
+  transition: border-color .2s ease, transform .2s ease, background .2s ease;
+}
+
+.app.dark :is(
+  .billing-plans article,
+  .event-card-grid article,
+  .venue-grid article,
+  .qr-card-grid article,
+  .folder-grid article,
+  .file-explorer article,
+  .asset-grid article,
+  .theme-grid article
+):hover {
+  border-color: color-mix(in srgb, var(--purple) 38%, var(--line));
+  background: color-mix(in srgb, var(--card) 94%, var(--purple));
+  transform: translateY(-2px);
+}
+
+.app.dark :is(.billing-plans span, .billing-plans small, .usage-grid span, .usage-grid small,
+  .crm-metrics span, .crm-metrics small, .crm-grid header span, .analytics-kpis span,
+  .analytics-kpis small, .analytics-charts header span, .operation-stats span,
+  .operations-board span, .calendar-foundation small, .payment-methods span) {
+  color: var(--muted);
+}
+
+.app.dark .billing-table-wrap { border-color: var(--line); background: var(--card); }
+.app.dark .billing-table { background: var(--card); color: var(--text); }
+.app.dark .billing-table th {
+  background: var(--surface-raised);
+  color: var(--text-soft);
+  font-weight: 700;
+}
+.app.dark .billing-table th,
+.app.dark .billing-table td { border-color: var(--line); }
+.app.dark .billing-table tbody tr:hover { background: color-mix(in srgb, var(--purple) 7%, transparent); }
+
+.app.dark .usage-grid i { background: var(--surface-soft); }
+.app.dark .billing-plans button:disabled {
+  background: var(--surface-soft);
+  color: var(--muted);
+}
+.app.dark .billing-alert {
+  border: 1px solid rgba(247, 196, 76, .2);
+  background: rgba(247, 196, 76, .09);
+  color: #f1ce72;
+}
+
+.app.dark :is(.event-status, .status-badge) {
+  background: rgba(139, 124, 255, .14);
+  color: #b8aaff;
+}
+.app.dark :is(.event-status.active, .status-badge.success) {
+  background: rgba(65, 201, 139, .12);
+  color: #7ddbad;
+}
+.app.dark :is(.event-status.cancelled, .event-status.archived, .status-badge.critical) {
+  background: rgba(245, 94, 102, .12);
+  color: #ff9b9f;
+}
+.app.dark .status-badge.high {
+  background: rgba(246, 183, 65, .12);
+  color: #efc36f;
+}
+
+.app.dark :is(.operations-alert, .analytics-error) {
+  border: 1px solid rgba(245, 94, 102, .22);
+  background: rgba(245, 94, 102, .1);
+  color: #ffadb1;
+}
+.app.dark .analytics-charts header > i {
+  background: rgba(65, 201, 139, .12);
+  color: #7ddbad;
+}
+
+.app.dark :is(.operations-board p, .crm-row, .calendar-foundation article) {
+  border-color: var(--line);
+}
+.app.dark :is(.operations-inline-form input, .operations-inline-form select,
+  .placement-forms input, .placement-forms select) {
+  color: var(--text);
+}
+
+.app.dark .qr-live-preview {
+  border: 1px solid rgba(139, 124, 255, .22);
+  background: radial-gradient(circle at 50% 35%, #332978, #12111e 70%);
+}
+.app.dark .qr-card-grid code {
+  color: #b8aaff;
+  background: var(--surface-raised);
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.app.dark :is(.asset-grid img, .brand-logos img, .preview-panel img) {
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(45deg, #1b1a22 25%, transparent 25%),
+    linear-gradient(-45deg, #1b1a22 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #1b1a22 75%),
+    linear-gradient(-45deg, transparent 75%, #1b1a22 75%),
+    #111116;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  background-size: 16px 16px;
+}
+.app.dark .preview-panel {
+  border-color: var(--line);
+  background: #17171e;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, .55);
+}
+
+.app.dark :is(.folder-grid article, .file-explorer article) { background: var(--card); }
+.app.dark .file-preview { background: var(--surface-raised); color: var(--purple); }
+.app.dark .drop-zone { border-color: rgba(155, 135, 245, .28); background: rgba(155, 135, 245, .035); }
+
+.app.dark .form-success {
+  border: 1px solid rgba(65, 201, 139, .24);
+  background: rgba(65, 201, 139, .1);
+  color: #87e1b7;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 10px;
+}
+
+.app.dark button:disabled { cursor: not-allowed; opacity: .62; }
+.app.dark :is(button, a, input, select, textarea):focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app * { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}

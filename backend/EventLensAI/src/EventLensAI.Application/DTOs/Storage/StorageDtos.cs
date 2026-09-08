@@ -1,0 +1,11 @@
+using EventLensAI.Application.Common;using EventLensAI.Domain.Enums;
+namespace EventLensAI.Application.DTOs.Storage;
+public sealed record StorageDashboardDto(long Allocated,long Used,long Remaining,long FileCount,long FolderCount,IReadOnlyDictionary<string,long>ByCategory,IReadOnlyList<StorageFileDto>Recent,IReadOnlyList<StorageFileDto>Largest);
+public sealed record StorageFileDto(Guid Id,Guid OrganizationId,Guid?FolderId,string FileName,string OriginalFileName,string Extension,string MimeType,long Size,int?Width,int?Height,decimal?Duration,string Checksum,string Category,string Uploader,StorageVisibility Visibility,bool IsFavourite,string?Notes,IReadOnlyList<string>Tags,DateTime CreatedAt,bool IsDeleted);
+public sealed record StorageFolderDto(Guid Id,Guid OrganizationId,Guid?ParentFolderId,string Name,DateTime CreatedAt,bool IsDeleted);
+public sealed record StorageCategoryDto(Guid Id,string Name,StorageFileCategory Type);
+public sealed record CreateStorageFolderRequest(string Name,Guid?ParentFolderId);public sealed record RenameStorageFolderRequest(string Name);public sealed record MoveStorageFolderRequest(Guid?ParentFolderId);
+public sealed record UpdateStorageFileRequest(string FileName,Guid?FolderId,Guid CategoryId,StorageVisibility Visibility,bool IsFavourite,string?Notes,IReadOnlyList<string>Tags);
+public sealed record StorageSearchRequest(Guid OrganizationId,string?Search,Guid?FolderId,Guid?CategoryId,string?MimeType,string?Tag,Guid?UploaderId,DateTime?From,DateTime?To,bool Trash=false,int Page=1,int PageSize=50);
+public sealed record StorageUpload(Guid OrganizationId,Guid?FolderId,Guid CategoryId,StorageVisibility Visibility,string?Tags,string FileName,string ContentType,long Length,Stream Content);
+public sealed record StorageDownload(Stream Content,string ContentType,string FileName);

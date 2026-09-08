@@ -1,0 +1,4 @@
+using FluentValidation;
+namespace EventLensAI.Application.Features.Booth;
+public sealed class SaveBoothExperienceConfigurationRequestValidator:AbstractValidator<SaveBoothExperienceConfigurationRequest>{public SaveBoothExperienceConfigurationRequestValidator(){RuleFor(x=>x.WelcomeMessage).NotEmpty().MaximumLength(300);RuleFor(x=>x.AttractTimeout).InclusiveBetween(10,900);RuleFor(x=>x.Theme).Must(x=>new[]{"Wedding","Corporate","Birthday","Festival"}.Contains(x));RuleFor(x=>x.Language).Matches("^[a-z]{2}(-[A-Z]{2})?$");RuleFor(x=>x.BackgroundMedia).MaximumLength(500).Must(x=>x is null||x.StartsWith("asset:")).WithMessage("Background media must be an approved asset reference.");}}
+public sealed class TransitionGuestJourneyRequestValidator:AbstractValidator<TransitionGuestJourneyRequest>{public TransitionGuestJourneyRequestValidator(){RuleFor(x=>x.SessionId).NotEmpty();RuleFor(x=>x.RecoveryToken).NotEmpty().Length(64);RuleFor(x=>x.Reason).MaximumLength(200);}}

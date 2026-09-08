@@ -1,0 +1,11 @@
+using EventLensAI.Domain.Entities;using EventLensAI.Domain.Enums;
+namespace EventLensAI.Application.Features.Booth;
+public sealed record CapturedMediaDto(Guid Id,Guid OrganizationId,Guid EventId,Guid SessionId,CaptureMode CaptureMode,string FileName,string MimeType,double Duration,int FrameCount,long FileSize,int Width,int Height,MediaCaptureStatus Status,DateTime CreatedAt);
+public sealed record CaptureModeDto(CaptureMode Mode,string Label,string PreferredMimeType,bool Supported);
+public sealed record MediaCaptureRequest(Guid OrganizationId,Guid EventId,Guid SessionId,CaptureMode CaptureMode,string FileName,string LocalStorageKey,string MimeType,int Width,int Height,int FrameCount,int FrameIntervalMs,int DurationSeconds,decimal Quality);
+public sealed record StopMediaRequest(double Duration,int FrameCount,long FileSize);
+public sealed record MediaProcessingStatusDto(Guid MediaId,MediaProcessingJobStatus State,int Progress,int Attempts,string?ErrorCode);
+public interface IMediaCaptureService{Task<CapturedMediaDto>StartAsync(MediaCaptureRequest request,CancellationToken ct);Task<CapturedMediaDto>StopAsync(Guid id,StopMediaRequest request,CancellationToken ct);Task<CapturedMediaDto>CancelAsync(Guid id,CancellationToken ct);Task<IReadOnlyList<CapturedMediaDto>>ListAsync(Guid sessionId,CancellationToken ct);Task<MediaProcessingStatusDto>StatusAsync(Guid id,CancellationToken ct);}
+public interface IGifCaptureService{CaptureMode Mode{get;}}public interface IVideoCaptureService{CaptureMode Mode{get;}}public interface IBoomerangService{CaptureMode Mode{get;}}public interface ITimeLapseService{CaptureMode Mode{get;}}
+public interface IMediaProcessingQueue{MediaProcessingStatusDto Queue(Guid mediaId);MediaProcessingStatusDto Start(Guid mediaId);MediaProcessingStatusDto Complete(Guid mediaId);MediaProcessingStatusDto Fail(Guid mediaId,string code);MediaProcessingStatusDto Retry(Guid mediaId);MediaProcessingStatusDto Cancel(Guid mediaId);MediaProcessingStatusDto Get(Guid mediaId);}
+public interface IMediaCaptureRepository{Task<CapturedMedia?>GetAsync(Guid id,CancellationToken ct);Task AddAsync(CapturedMedia value,CancellationToken ct);Task<IReadOnlyList<CapturedMedia>>ListAsync(Guid sessionId,CancellationToken ct);Task AddJobAsync(MediaProcessingJob value,CancellationToken ct);}

@@ -1,0 +1,32 @@
+using EventLensAI.Application.DTOs.Organizations;
+using EventLensAI.Application.Exceptions;
+using EventLensAI.Application.Interfaces.Identity;
+using EventLensAI.Application.Interfaces.Persistence;
+using EventLensAI.Domain.Entities;
+using EventLensAI.Domain.Enums;
+namespace EventLensAI.Application.Services;
+public interface IOrganizationSecurityService
+{
+ Task<bool> HasPermissionAsync(Guid organizationId,string permissionKey,CancellationToken ct);
+ Task<IReadOnlyList<PermissionDto>> GetMemberPermissionsAsync(Guid organizationId,Guid userId,CancellationToken ct);
+ Task SetMemberPermissionAsync(Guid organizationId,Guid userId,SetMemberPermissionRequest request,CancellationToken ct);
+ Task<OwnershipTransferDto> StartTransferAsync(Guid organizationId,CreateOwnershipTransferRequest request,CancellationToken ct);
+ Task<OwnershipTransferDto?> GetPendingTransferAsync(Guid organizationId,CancellationToken ct);
+ Task AcceptTransferAsync(Guid organizationId,Guid transferId,CancellationToken ct);
+ Task CancelTransferAsync(Guid organizationId,Guid transferId,CancellationToken ct);
+}
+public sealed class OrganizationSecurityService(IOrganizationRepository organizations,IOrganizationSecurityRepository security,IAuditRepository audits,ICurrentUserService current,IUnitOfWork uow):IOrganizationSecurityService
+{
+ public async Task<bool> HasPermissionAsync(Guid org,string key,CancellationToken ct){var member=await RequireMember(org,ct);if(member.Role.Name==SystemRoles.Owner||current.Roles.Contains(SystemRoles.SuperAdmin))return true;var permission=await security.GetPermissionAsync(key,ct);if(permission is null)return false;var custom=await security.GetMemberPermissionAsync(member.Id,permission.Id,ct);if(custom is not null)return custom.Allowed;return (await security.ListRolePermissionsAsync(member.RoleId,ct)).Any(x=>x.PermissionId==permission.Id);}
+ public async Task<IReadOnlyList<PermissionDto>> GetMemberPermissionsAsync(Guid org,Guid user,CancellationToken ct){await RequireOwner(org,ct);var member=await organizations.GetMemberAsync(org,user,ct)??throw new NotFoundException("Member not found.");var all=await security.ListPermissionsAsync(ct);var role=(await security.ListRolePermissionsAsync(member.RoleId,ct)).Select(x=>x.PermissionId).ToHashSet();var overrides=(await security.ListMemberPermissionsAsync(member.Id,ct)).ToDictionary(x=>x.PermissionId);return all.Select(x=>new PermissionDto(x.Id,x.Key,x.Description,overrides.TryGetValue(x.Id,out var o)?o.Allowed:role.Contains(x.Id),overrides.ContainsKey(x.Id))).ToArray();}
+ public async Task SetMemberPermissionAsync(Guid org,Guid user,SetMemberPermissionRequest request,CancellationToken ct){await RequireOwner(org,ct);var member=await organizations.GetMemberAsync(org,user,ct)??throw new NotFoundException("Member not found.");if(member.Role.Name==SystemRoles.Owner)throw new ConflictException("Owner permissions cannot be restricted.");var permission=await security.GetPermissionAsync(request.PermissionKey,ct)??throw new NotFoundException("Permission not found.");var value=await security.GetMemberPermissionAsync(member.Id,permission.Id,ct);if(value is null)await security.AddMemberPermissionAsync(new(member.Id,permission.Id,request.Allowed),ct);else value.Set(request.Allowed);await Audit(org,AuditAction.ChangeRole,ct);await uow.SaveChangesAsync(ct);}
+ public async Task<OwnershipTransferDto> StartTransferAsync(Guid org,CreateOwnershipTransferRequest request,CancellationToken ct){var owner=await RequireOwner(org,ct);if(request.NewOwnerUserId==owner.UserId)throw new ConflictException("User is already the owner.");var target=await organizations.GetMemberAsync(org,request.NewOwnerUserId,ct)??throw new NotFoundException("New owner must already be an organization member.");if(await security.GetPendingTransferAsync(org,ct)is not null)throw new ConflictException("A transfer is already pending.");var transfer=new OrganizationOwnershipTransfer(org,owner.UserId,target.UserId,DateTime.UtcNow.AddDays(2));await security.AddTransferAsync(transfer,ct);await uow.SaveChangesAsync(ct);return Map(transfer);}
+ public async Task<OwnershipTransferDto?> GetPendingTransferAsync(Guid org,CancellationToken ct){await RequireMember(org,ct);var x=await security.GetPendingTransferAsync(org,ct);return x is null?null:Map(x);}
+ public async Task AcceptTransferAsync(Guid organizationId,Guid id,CancellationToken ct){var transfer=await security.GetTransferAsync(id,ct)??throw new NotFoundException("Transfer not found.");if(transfer.OrganizationId!=organizationId)throw new NotFoundException("Transfer not found.");if(transfer.ToUserId!=RequireUser())throw new UnauthorizedException("Only the nominated owner can accept.");var oldOwner=await organizations.GetMemberAsync(transfer.OrganizationId,transfer.FromUserId,ct)??throw new NotFoundException("Current owner not found.");var newOwner=await organizations.GetMemberAsync(transfer.OrganizationId,transfer.ToUserId,ct)??throw new NotFoundException("New owner not found.");transfer.Accept();oldOwner.ChangeRole(SystemRoles.ManagerId);newOwner.ChangeRole(SystemRoles.OwnerId);await Audit(transfer.OrganizationId,AuditAction.ChangeRole,ct);await uow.SaveChangesAsync(ct);}
+ public async Task CancelTransferAsync(Guid organizationId,Guid id,CancellationToken ct){var transfer=await security.GetTransferAsync(id,ct)??throw new NotFoundException("Transfer not found.");if(transfer.OrganizationId!=organizationId)throw new NotFoundException("Transfer not found.");await RequireOwner(transfer.OrganizationId,ct);transfer.Cancel();await uow.SaveChangesAsync(ct);}
+ private async Task<OrganizationMember> RequireOwner(Guid org,CancellationToken ct){var m=await RequireMember(org,ct);if(m.Role.Name!=SystemRoles.Owner&&!current.Roles.Contains(SystemRoles.SuperAdmin))throw new UnauthorizedException("Owner permission required.");return m;}
+ private async Task<OrganizationMember> RequireMember(Guid org,CancellationToken ct)=>await organizations.GetMemberAsync(org,RequireUser(),ct)??throw new UnauthorizedException("Organization access denied.");
+ private Guid RequireUser()=>current.UserId??throw new UnauthorizedException("Authentication required.");
+ private Task Audit(Guid org,AuditAction action,CancellationToken ct)=>audits.AddAsync(new AuditLog(RequireUser(),nameof(Organization),org,action,current.IPAddress),ct);
+ private static OwnershipTransferDto Map(OrganizationOwnershipTransfer x)=>new(x.Id,x.OrganizationId,x.FromUserId,x.ToUserId,x.Status,x.ExpiresAt,x.AcceptedAt);
+}

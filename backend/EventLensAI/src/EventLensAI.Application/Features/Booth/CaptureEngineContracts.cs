@@ -1,0 +1,14 @@
+using EventLensAI.Domain.Entities;using EventLensAI.Domain.Enums;
+namespace EventLensAI.Application.Features.Booth;
+public sealed record CaptureConfigurationDto(Guid Id,Guid OrganizationId,Guid EventId,int CountdownDuration,int NumberOfPhotos,int CaptureInterval,decimal ImageQuality,string Resolution,bool MirrorImage,bool AutoCaptureEnabled);
+public sealed record UpdateCaptureConfigurationRequest(Guid OrganizationId,Guid EventId,int CountdownDuration,int NumberOfPhotos,int CaptureInterval,decimal ImageQuality,string Resolution,bool MirrorImage,bool AutoCaptureEnabled);
+public sealed record CapturedPhotoDto(Guid Id,int CaptureNumber,string FileName,int Width,int Height,long FileSize,string MimeType,DateTime CapturedAt,CaptureProcessingStatus ProcessingStatus);
+public sealed record StartCaptureRequest(Guid OrganizationId,Guid EventId,Guid SessionId,int CaptureNumber,string FileName,string LocalStorageKey,int Width,int Height,long FileSize,string MimeType);
+public sealed record CancelCaptureRequest(Guid OrganizationId,Guid EventId,Guid SessionId);
+public sealed record CaptureStatusDto(Guid SessionId,CaptureWorkflowState State,int CapturedCount,int TargetCount,string? ErrorCode,DateTime ChangedAt);
+public sealed record CountdownEventDto(string Event,int? Value,DateTime Timestamp);
+public interface ICaptureService{Task<CaptureConfigurationDto>GetConfigurationAsync(Guid organizationId,Guid eventId,CancellationToken ct);Task<CaptureConfigurationDto>UpdateConfigurationAsync(UpdateCaptureConfigurationRequest request,CancellationToken ct);Task<CapturedPhotoDto>RegisterAsync(StartCaptureRequest request,CancellationToken ct);Task<CaptureStatusDto>CancelAsync(CancelCaptureRequest request,CancellationToken ct);Task<CaptureStatusDto>GetStatusAsync(Guid organizationId,Guid sessionId,CancellationToken ct);Task<IReadOnlyList<CapturedPhotoDto>>ListAsync(Guid sessionId,CancellationToken ct);}
+public interface ICountdownService{IReadOnlyList<CountdownEventDto>Create(int seconds);}
+public interface ICaptureQueueService{CaptureStatusDto Prepare(Guid sessionId,int target);CaptureStatusDto Countdown(Guid sessionId);CaptureStatusDto Capturing(Guid sessionId);CaptureStatusDto Saved(Guid sessionId);CaptureStatusDto Fail(Guid sessionId,string errorCode);CaptureStatusDto Cancel(Guid sessionId);CaptureStatusDto Get(Guid sessionId);}
+public interface ILocalCaptureStorageService{string Provider{get;}bool UploadEnabled{get;}}
+public interface ICaptureEngineRepository{Task<CaptureConfiguration?>GetConfigurationAsync(Guid organizationId,Guid eventId,CancellationToken ct);Task AddConfigurationAsync(CaptureConfiguration value,CancellationToken ct);Task<CapturedPhoto?>GetPhotoAsync(Guid id,CancellationToken ct);Task AddPhotoAsync(CapturedPhoto value,CancellationToken ct);Task<IReadOnlyList<CapturedPhoto>>ListAsync(Guid sessionId,CancellationToken ct);}

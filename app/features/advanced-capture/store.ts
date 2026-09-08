@@ -1,0 +1,3 @@
+import{create}from"zustand";import type{CaptureMode,LocalMedia,MediaState}from"./types";
+type State={mode:CaptureMode;state:MediaState;progress:number;items:LocalMedia[];error:string|null;setMode:(mode:CaptureMode)=>void;setState:(state:MediaState)=>void;setProgress:(progress:number)=>void;add:(x:LocalMedia)=>void;setError:(x:string|null)=>void};
+export const useAdvancedCaptureStore=create<State>(set=>({mode:"GIF",state:"Ready",progress:0,items:[],error:null,setMode:mode=>set({mode,state:"Ready",progress:0,error:null}),setState:state=>set({state}),setProgress:progress=>set({progress}),add:x=>set(s=>({items:[x,...s.items]})),setError:error=>set({error,state:error?"Error":"Ready"})}));

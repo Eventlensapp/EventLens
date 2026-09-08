@@ -1,0 +1,4 @@
+using EventLensAI.Application.Features.Booth;using EventLensAI.Domain.Entities;using EventLensAI.Infrastructure.Persistence;using Microsoft.EntityFrameworkCore;
+namespace EventLensAI.Infrastructure.Repositories;
+internal sealed class AdvancedMediaRepository(EventLensDbContext db):IMediaCaptureRepository
+{public Task<CapturedMedia?>GetAsync(Guid id,CancellationToken ct)=>db.CapturedMedia.FirstOrDefaultAsync(x=>x.Id==id,ct);public Task AddAsync(CapturedMedia x,CancellationToken ct)=>db.CapturedMedia.AddAsync(x,ct).AsTask();public async Task<IReadOnlyList<CapturedMedia>>ListAsync(Guid sessionId,CancellationToken ct)=>await db.CapturedMedia.AsNoTracking().Where(x=>x.SessionId==sessionId).OrderByDescending(x=>x.CreatedAt).ToListAsync(ct);public Task AddJobAsync(MediaProcessingJob x,CancellationToken ct)=>db.MediaProcessingJobs.AddAsync(x,ct).AsTask();}

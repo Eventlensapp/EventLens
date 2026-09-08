@@ -1,0 +1,12 @@
+using EventLensAI.Domain.Enums;
+namespace EventLensAI.Application.DTOs.Organizations;
+public sealed record WatermarkSettings(bool Enabled,string? ImageUrl,decimal Opacity,string Position,decimal Scale,int Margin);
+public sealed record QrBrandingSettings(string PrimaryColor,string BackgroundColor,bool Rounded,string? Frame,bool LogoInCenter,string ErrorCorrectionLevel,int DefaultSize);
+public sealed record EmailBrandingSettings(string CompanyName,string? LogoUrl,string PrimaryColor,string? Footer,string? SocialLinksJson,string? Signature);
+public sealed record BrandKitDto(Guid Id,Guid OrganizationId,IReadOnlyDictionary<string,string?> Logos,IReadOnlyDictionary<string,string> Colors,string PrimaryFont,string SecondaryFont,string HeadingFont,string BodyFont,decimal FontScale,WatermarkSettings Watermark,QrBrandingSettings Qr,EmailBrandingSettings Email,DateTime CreatedAt,DateTime? UpdatedAt);
+public sealed record UpdateBrandKitRequest(string PrimaryColor,string SecondaryColor,string AccentColor,string BackgroundColor,string SurfaceColor,string TextColor,string SuccessColor,string WarningColor,string DangerColor,string PrimaryFont,string SecondaryFont,string HeadingFont,string BodyFont,decimal FontScale,WatermarkSettings Watermark,QrBrandingSettings Qr,EmailBrandingSettings Email);
+public sealed record BrandAssetDto(Guid Id,Guid OrganizationId,string Name,BrandAssetType Type,string FileUrl,string MimeType,long FileSize,string? Tags,int Version,Guid? PreviousVersionId,DateTime CreatedAt);
+public sealed record BrandThemeDto(Guid Id,Guid OrganizationId,string Name,string? Description,BrandThemeKind Kind,string ConfigurationJson,bool IsDefault,bool IsActive,DateTime CreatedAt);
+public sealed record CreateBrandThemeRequest(string Name,string? Description,BrandThemeKind Kind,string ConfigurationJson);
+public sealed record UpdateBrandThemeRequest(string Name,string? Description,string ConfigurationJson);
+public sealed record DuplicateBrandThemeRequest(string Name);

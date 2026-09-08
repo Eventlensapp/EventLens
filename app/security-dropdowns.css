@@ -1,0 +1,59 @@
+.transfer-new > label {
+  display: grid;
+  gap: 8px;
+}
+
+.transfer-new select,
+.permissions-panel select {
+  width: 100%;
+  height: 44px;
+  min-height: 44px;
+  padding: 0 42px 0 14px;
+  border: 1px solid var(--input-border, var(--line));
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--input-bg, var(--bg));
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 17px) 19px,
+    calc(100% - 12px) 19px;
+  background-repeat: no-repeat;
+  background-size: 5px 5px, 5px 5px;
+  color: var(--text);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 44px;
+  cursor: pointer;
+}
+
+.permissions-panel > header {
+  align-items: center;
+  gap: 32px;
+}
+
+.permissions-panel > header > label {
+  width: 310px;
+  flex: 0 0 310px;
+  display: grid;
+  gap: 8px;
+}
+
+.permissions-panel > header > label > span {
+  margin: 0;
+  line-height: 1;
+}
+
+@media (max-width: 850px) {
+  .permissions-panel > header {
+    align-items: stretch;
+    gap: 18px;
+  }
+
+  .permissions-panel > header > label {
+    width: 100%;
+    flex-basis: auto;
+  }
+}

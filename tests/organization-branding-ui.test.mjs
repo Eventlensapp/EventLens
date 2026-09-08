@@ -1,0 +1,5 @@
+import test from"node:test";import assert from"node:assert/strict";import{readFileSync}from"node:fs";const read=p=>readFileSync(new URL(`../${p}`,import.meta.url),"utf8");
+test("brand kit supports logo and colour workflows",()=>{const x=read("app/pages/OrganizationBranding.tsx");for(const v of["brandingApi.logo","brandingApi.removeLogo","type=\"color\"","Save brand kit","QR defaults","Email branding"])assert.ok(x.includes(v))});
+test("asset manager supports upload and archive",()=>{const x=read("app/pages/OrganizationBrandAssets.tsx");assert.match(x,/brandingApi\.uploadAsset/);assert.match(x,/brandingApi\.deleteAsset/)});
+test("theme manager supports switching duplication and presets",()=>{const x=read("app/pages/OrganizationBrandThemes.tsx");for(const v of["activateTheme","duplicateTheme","archiveTheme","Preset"])assert.ok(x.includes(v))});
+test("branding routes are registered",()=>{const x=read("app/App.tsx");for(const v of["branding/assets","branding/themes",":id/branding"])assert.ok(x.includes(v))});

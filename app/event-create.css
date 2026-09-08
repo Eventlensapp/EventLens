@@ -1,0 +1,48 @@
+.event-create-page { max-width:1320px; margin:0 auto; }
+.event-create-steps { display:grid; grid-template-columns:repeat(3,1fr); margin-bottom:22px; padding:7px; border:1px solid #2d2b35; border-radius:15px; background:#111016; }
+.event-create-steps button { position:relative; display:flex; align-items:center; justify-content:center; gap:9px; min-height:42px; border:0; border-radius:10px; background:transparent; color:#6f6b77; font-size:9px; cursor:default; }
+.event-create-steps button+button::before { content:""; position:absolute; left:-1px; top:12px; width:1px; height:18px; background:#2c2a33; }
+.event-create-steps button span { display:grid; place-items:center; width:23px; height:23px; border:1px solid #34313c; border-radius:7px; font-size:8px; }
+.event-create-steps button.current { background:#1b1827; color:#f4f1fa; }
+.event-create-steps button.current span { border-color:#745be7; background:#6f56df; color:#fff; }
+.event-create-steps button.complete { color:#a89cef; cursor:pointer; }
+.event-create-steps button.complete span { border-color:#493e72; background:#251f3b; }
+.event-start,.event-details-step,.event-review { padding:26px; border:1px solid #2e2c36; border-radius:20px; background:radial-gradient(circle at 88% 0,rgba(111,82,225,.08),transparent 30%),#121117; }
+.event-step-heading { margin-bottom:22px; }
+.event-step-heading>span { color:#9a84f5; font-size:8px; font-weight:800; letter-spacing:.16em; }
+.event-step-heading h2 { margin:7px 0 5px; font-size:22px; }
+.event-step-heading p { margin:0; color:#85818f; font-size:10px; }
+.event-template-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.event-template-grid>button { display:grid; grid-template-columns:48px 1fr auto; align-items:center; gap:15px; min-height:112px; padding:18px; border:1px solid #34313e; border-radius:16px; background:#15141b; color:#f7f4fd; text-align:left; cursor:pointer; transition:transform .18s ease,border-color .18s ease,background .18s ease; }
+.event-template-grid>button:hover { transform:translateY(-2px); border-color:#765fe0; background:#191624; }
+.event-template-grid i { display:grid; place-items:center; width:48px; height:48px; border-radius:14px; background:#241d3a; color:#a78fff; font-size:20px; font-style:normal; }
+.event-template-grid button>span { display:grid; gap:5px; }
+.event-template-grid button>span>b { font-size:13px; }
+.event-template-grid button small { color:#87828f; font-size:9px; }
+.event-template-grid em { color:#aa98fa; font-size:9px; font-style:normal; font-weight:800; }
+.event-template-hint { margin:15px 2px 0; color:#77727f; font-size:9px; }
+.event-details-step .event-core-form { grid-template-columns:1.1fr 1fr; }
+.event-details-step .event-core-form section { padding:20px; border-color:#302e38; border-radius:15px; background:#0f0e13; }
+.event-details-step .event-core-form section:nth-of-type(3) { grid-column:1/-1; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.event-details-step .event-core-form section:nth-of-type(3) h2 { grid-column:1/-1; }
+.event-details-step .event-core-form label { color:#aaa6b2; font-size:9px; font-weight:700; }
+.event-details-step .event-core-form input,.event-details-step .event-core-form select,.event-details-step .event-core-form textarea { box-sizing:border-box; width:100%; border-color:#302e38; background:#111016; }
+.event-details-step .event-core-form input:focus,.event-details-step .event-core-form select:focus,.event-details-step .event-core-form textarea:focus { outline:0; border-color:#765fe0; box-shadow:0 0 0 3px rgba(118,95,224,.1); }
+.event-details-step .event-core-form>.event-create { grid-column:1/-1; justify-self:end; min-width:190px; border-radius:11px; background:linear-gradient(135deg,#7359e7,#9875f5); color:#fff; text-align:center; }
+.event-step-back { margin-top:15px; border:0; background:transparent; color:#9488c8; font-size:9px; cursor:pointer; }
+.event-review-card { overflow:hidden; border:1px solid #34313e; border-radius:18px; background:#0f0e13; }
+.event-review-title { display:grid; grid-template-columns:48px 1fr auto; align-items:center; gap:15px; padding:22px; border-bottom:1px solid #2b2932; background:linear-gradient(135deg,#191625,#121117); }
+.event-review-title>i { display:grid; place-items:center; width:48px; height:48px; border-radius:14px; background:#241d3a; color:#aa91ff; font-size:20px; font-style:normal; }
+.event-review-title small,.event-review-grid small { color:#8c7bd4; font-size:8px; font-weight:800; letter-spacing:.12em; }
+.event-review-title h2 { margin:5px 0 3px; font-size:18px; }
+.event-review-title p { margin:0; color:#817c88; font-size:9px; }
+.event-review-title>b { padding:6px 9px; border-radius:999px; background:#27213c; color:#b8a7ff; font-size:8px; }
+.event-review-grid { display:grid; grid-template-columns:repeat(3,1fr); }
+.event-review-grid>div { display:grid; gap:7px; padding:19px 22px; border-right:1px solid #292731; border-bottom:1px solid #292731; }
+.event-review-grid>div:nth-child(3n) { border-right:0; }
+.event-review-grid strong { font-size:10px; }
+.event-review-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:18px; }
+.event-review-actions button { min-height:43px; padding:0 16px; border:1px solid #373440; border-radius:11px; background:#191820; color:#ddd8e6; font-size:9px; font-weight:800; cursor:pointer; }
+.event-review-actions button:last-child { border-color:#745ce0; background:#7056e2; color:#fff; }
+@media(max-width:850px){.event-template-grid,.event-details-step .event-core-form{grid-template-columns:1fr}.event-details-step .event-core-form section:nth-of-type(3){grid-column:auto;grid-template-columns:1fr}.event-review-grid{grid-template-columns:1fr 1fr}.event-review-grid>div:nth-child(3n){border-right:1px solid #292731}.event-review-grid>div:nth-child(2n){border-right:0}}
+@media(max-width:560px){.event-create-steps button b{display:none}.event-template-grid>button,.event-review-title{grid-template-columns:42px 1fr}.event-template-grid em,.event-review-title>b{grid-column:2}.event-review-grid{grid-template-columns:1fr}.event-review-grid>div{border-right:0}.event-review-actions{flex-direction:column-reverse}}

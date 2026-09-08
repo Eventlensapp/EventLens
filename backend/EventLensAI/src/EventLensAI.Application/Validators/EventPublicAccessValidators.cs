@@ -1,0 +1,4 @@
+using EventLensAI.Application.DTOs.Events;using FluentValidation;
+namespace EventLensAI.Application.Validators;
+public sealed class CreateQRCodeValidator:AbstractValidator<CreateQRCodeRequest>{public CreateQRCodeValidator(){RuleFor(x=>x.QRType).IsInEnum();RuleFor(x=>x.Customization).NotNull();RuleFor(x=>x.Customization.PrimaryColor).Matches("^#[0-9A-Fa-f]{6}$");RuleFor(x=>x.Customization.BackgroundColor).Matches("^#[0-9A-Fa-f]{6}$");RuleFor(x=>x.Customization.CaptionText).MaximumLength(160);RuleFor(x=>x.ExpiresAt).GreaterThan(DateTime.UtcNow).When(x=>x.ExpiresAt.HasValue);}}
+public sealed class UpdateEventAccessSettingsValidator:AbstractValidator<UpdateEventAccessSettingRequest>{public UpdateEventAccessSettingsValidator(){RuleFor(x=>x.Password).MinimumLength(8).MaximumLength(128).When(x=>!string.IsNullOrWhiteSpace(x.Password));RuleFor(x=>x.ExpiryDate).GreaterThan(DateTime.UtcNow).When(x=>x.ExpiryDate.HasValue);}}

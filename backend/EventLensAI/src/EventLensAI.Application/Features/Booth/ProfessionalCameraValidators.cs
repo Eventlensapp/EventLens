@@ -1,0 +1,3 @@
+using FluentValidation;
+namespace EventLensAI.Application.Features.Booth;
+public sealed class RegisterProfessionalCameraRequestValidator:AbstractValidator<RegisterProfessionalCameraRequest>{public RegisterProfessionalCameraRequestValidator(){RuleFor(x=>x.OrganizationId).NotEmpty();RuleFor(x=>x.Name).NotEmpty().MaximumLength(100);RuleFor(x=>x.ProviderType).IsInEnum();RuleFor(x=>x.Model).NotEmpty().MaximumLength(100);RuleFor(x=>x.SerialNumber).NotEmpty().MaximumLength(200);RuleFor(x=>x.ConnectionType).Must(x=>new[]{"Browser","USB","Network","Bridge"}.Contains(x));RuleFor(x=>x.FirmwareVersion).MaximumLength(100);}}

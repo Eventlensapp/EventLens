@@ -1,0 +1,2 @@
+export type TemplateElement={id:string;elementType:number;positionX:number;positionY:number;width:number;height:number;rotation:number;layerOrder:number;styleConfiguration:string};
+export type PhotoTemplate={id:string;organizationId:string;name:string;description:string;category:number;width:number;height:number;resolution:number;aspectRatio:string;isPublic:boolean;isActive:boolean;layout:{id:string;layoutType:number;canvasWidth:number;canvasHeight:number;backgroundColor:string;backgroundImage?:string};elements:TemplateElement[];createdAt:string};

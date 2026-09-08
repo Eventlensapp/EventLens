@@ -1,0 +1,77 @@
+.event-modal.branch-modal {
+  width: min(680px, calc(100vw - 30px));
+}
+
+.event-modal.branch-modal > .branch-form-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 15px;
+  margin-top: 2px;
+}
+
+.event-modal.branch-modal > .branch-form-grid > label {
+  min-width: 0;
+  margin: 0;
+}
+
+.event-modal.branch-modal > .branch-form-grid > .branch-wide {
+  grid-column: 1 / -1;
+}
+
+.event-modal.branch-modal > .branch-form-grid :is(input, select) {
+  width: 100%;
+  min-width: 0;
+}
+
+.event-modal.branch-modal > .branch-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 8px;
+}
+
+.branch-detail > header > select {
+  width: 170px;
+  height: 42px;
+  min-height: 42px;
+  padding: 0 40px 0 13px;
+  border: 1px solid var(--input-border, var(--line));
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--input-bg, var(--panel2));
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 16px) 18px,
+    calc(100% - 11px) 18px;
+  background-repeat: no-repeat;
+  background-size: 5px 5px, 5px 5px;
+  color: var(--text);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 42px;
+  cursor: pointer;
+}
+
+.app .branch-detail > header > select:focus,
+.app .branch-detail > header > select:focus-visible {
+  border-color: var(--purple);
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--purple) 18%, transparent);
+}
+
+@media (max-width: 620px) {
+  .event-modal.branch-modal > .branch-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .event-modal.branch-modal > .branch-form-grid > .branch-wide {
+    grid-column: auto;
+  }
+
+  .branch-detail > header > select {
+    width: 100%;
+  }
+}

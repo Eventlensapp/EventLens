@@ -1,0 +1,4 @@
+using EventLensAI.Application.Features.Booth;using EventLensAI.Domain.Entities;using EventLensAI.Infrastructure.Persistence;using Microsoft.EntityFrameworkCore;
+namespace EventLensAI.Infrastructure.Repositories;
+internal sealed class CameraControlRepository(EventLensDbContext db):ICameraControlRepository
+{public async Task<IReadOnlyList<CameraProfile>>ListAsync(Guid org,CancellationToken ct)=>await db.CameraProfiles.AsNoTracking().Where(x=>x.OrganizationId==org).OrderBy(x=>x.Name).ToListAsync(ct);public Task<CameraProfile?>GetAsync(Guid id,CancellationToken ct)=>db.CameraProfiles.FirstOrDefaultAsync(x=>x.Id==id,ct);public Task AddAsync(CameraProfile x,CancellationToken ct)=>db.CameraProfiles.AddAsync(x,ct).AsTask();public Task AddHistoryAsync(CameraSettingsHistory x,CancellationToken ct)=>db.CameraSettingsHistory.AddAsync(x,ct).AsTask();}

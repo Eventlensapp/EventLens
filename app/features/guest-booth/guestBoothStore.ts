@@ -1,0 +1,5 @@
+import{create}from"zustand";import type{GuestBoothState,GuestJourney,GuestMode}from"./types";
+const KEY="eventlens_guest_journey";
+type GuestState={journey:GuestJourney|null;state:GuestBoothState;mode?:GuestMode;progress:number;error?:string;setJourney:(x:GuestJourney)=>void;setMode:(x:GuestMode)=>void;setProgress:(x:number)=>void;fail:(x:string)=>void;clear:()=>void};
+export const useGuestBoothStore=create<GuestState>(set=>({journey:null,state:"Attract",progress:0,setJourney:x=>{sessionStorage.setItem(KEY,JSON.stringify({sessionId:x.sessionId,recoveryToken:x.recoveryToken,eventId:x.eventId}));set({journey:x,state:x.state,mode:x.selectedMode,error:undefined})},setMode:mode=>set({mode}),setProgress:progress=>set({progress}),fail:error=>set({state:"Error",error}),clear:()=>{sessionStorage.removeItem(KEY);set({journey:null,state:"Attract",progress:0,error:undefined,mode:undefined})}}));
+export const savedGuestJourney=()=>{try{return JSON.parse(sessionStorage.getItem(KEY)||"null")as{sessionId:string;recoveryToken:string;eventId:string}|null}catch{return null}};
