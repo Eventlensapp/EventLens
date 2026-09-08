@@ -71,3 +71,7 @@
 .topbar .page-back:focus-visible{outline:3px solid rgba(132,101,232,.25);outline-offset:2px}
 .topbar .page-back span{font-size:18px;line-height:1}
 @media(max-width:620px){.topbar .page-heading{gap:8px}.topbar .page-back{width:34px;height:34px}.topbar .page-heading>div>span{display:none}}
+.operations-global-tabs{display:flex;gap:4px;margin:32px max(24px,calc((100% - 1318px)/2)) 0;padding:5px;width:max-content;max-width:calc(100% - 48px);overflow-x:auto;border:1px solid var(--line);border-radius:13px;background:var(--card)}
+.operations-global-tabs a{padding:11px 18px;border-radius:9px;color:var(--muted);font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap}
+.operations-global-tabs a.active{background:var(--purple);color:#fff}
+.operations-global-tabs+.content>.experience-tabs{display:none}

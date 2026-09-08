@@ -68,6 +68,11 @@ export function AppShell({ children, title, eyebrow }: { children: ReactNode; ti
   const initials = state.userName.split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase();
   const activeOrganization = state.organizations.find((organization) => organization.id === state.activeOrganizationId);
   const showBackButton = !mainPages.has(location.pathname);
+  const operationsRoute = location.pathname.match(/^\/events\/([^/]+)\/(operations|venue|schedule|checklist|staff|placements)$/);
+  const operationsTabs = operationsRoute ? [
+    ["operations", "Operations"], ["venue", "Venue"], ["schedule", "Schedule"],
+    ["checklist", "Checklist"], ["staff", "Staff"], ["placements", "Placements"],
+  ] : [];
 
   useEffect(() => {
     const closeMenu = (event: MouseEvent) => {
@@ -148,7 +153,9 @@ export function AppShell({ children, title, eyebrow }: { children: ReactNode; ti
           <button className="account-signout" role="menuitem" type="button" onClick={logout}><span>↪</span>Sign out<i /></button>
         </div>}
       </div>
-    </div></header><div className="content">{children}</div></main>
+    </div></header>{operationsRoute && <nav className="operations-global-tabs" aria-label="Event operations">
+      {operationsTabs.map(([path, label]) => <NavLink key={path} to={`/events/${operationsRoute[1]}/${path}`} className={operationsRoute[2] === path ? "active" : ""}>{label}</NavLink>)}
+    </nav>}<div className="content">{children}</div></main>
   </div>;
 }
 
