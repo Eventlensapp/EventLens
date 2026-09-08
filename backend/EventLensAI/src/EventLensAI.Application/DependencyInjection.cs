@@ -16,6 +16,7 @@ public static class DependencyInjection
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
         services.AddAutoMapper(_ => { }, typeof(MappingProfile).Assembly);
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IOrganizationService, OrganizationService>();
         services.AddScoped<IOrganizationSecurityService, OrganizationSecurityService>();
         services.AddScoped<IDepartmentService, DepartmentService>();

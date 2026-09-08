@@ -31,6 +31,7 @@ internal sealed class TokenService(IOptions<JwtOptions> options) : ITokenService
         return new AccessToken(new JwtSecurityTokenHandler().WriteToken(token), expiresAt);
     }
     public string CreateRefreshToken() => Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+    public string CreateOpaqueToken() => Convert.ToBase64String(RandomNumberGenerator.GetBytes(48));
     public string HashRefreshToken(string refreshToken) =>
         Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(refreshToken)));
 }

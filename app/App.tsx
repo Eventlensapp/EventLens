@@ -11,6 +11,8 @@ import Gallery from "./pages/Gallery";
 import Pricing from "./pages/Pricing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import AccountSettings from "./pages/AccountSettings";
+import {ForgotPassword,ResetPassword,VerifyEmail} from "./pages/AccountRecovery";
 import SessionBridge from "./components/SessionBridge";
 import Events from "./pages/Events";
 import EventCreate from "./pages/EventCreate";
@@ -75,6 +77,10 @@ export default function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/account" element={<Protected><AccountSettings /></Protected>} />
         <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
         <Route path="/events" element={<Protected><Events /></Protected>} />
         <Route path="/events/create" element={<Protected><EventCreate /></Protected>} />

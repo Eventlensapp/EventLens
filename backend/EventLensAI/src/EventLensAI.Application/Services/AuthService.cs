@@ -10,6 +10,7 @@ public sealed class AuthService(
     IUserRepository users,
     IPasswordService passwords,
     ITokenService tokens,
+    ICurrentUserService current,
     IUnitOfWork unitOfWork) : IAuthService
 {
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken)
@@ -21,6 +22,7 @@ public sealed class AuthService(
         var passwordHash = passwords.Hash(request.Password);
         var user = new User(request.FirstName, request.LastName, request.Email, passwordHash, request.Phone);
         await users.AddUserAsync(user, cancellationToken);
+        await users.AddActivityAsync(new(user.Id,"account.registered","Account registered.",current.IPAddress,null),cancellationToken);
         return await IssueAsync(user, [SystemRoles.Guest], Guid.NewGuid(), cancellationToken);
     }
 
@@ -28,10 +30,15 @@ public sealed class AuthService(
     {
         var user = await users.GetByNormalizedEmailAsync(
             request.Email.Trim().ToUpperInvariant(), cancellationToken);
+        if(user?.IsLockedOut==true)throw new UnauthorizedException("Account is temporarily locked. Try again later.");
         if (user is null || !user.IsActive || !passwords.Verify(user, request.Password, user.PasswordHash))
+        {
+            if(user is not null){user.RecordFailedLogin();await users.AddActivityAsync(new(user.Id,"login.failed","Failed login attempt.",current.IPAddress,null),cancellationToken);await unitOfWork.SaveChangesAsync(cancellationToken);}
             throw new UnauthorizedException("Invalid email or password.");
+        }
 
         user.RecordLogin();
+        await users.AddActivityAsync(new(user.Id,"login.succeeded","Signed in successfully.",current.IPAddress,null),cancellationToken);
         var roles = RolesFor(user);
         return await IssueAsync(user, roles, Guid.NewGuid(), cancellationToken);
     }
@@ -50,7 +57,7 @@ public sealed class AuthService(
 
         var newRawToken = tokens.CreateRefreshToken();
         var replacement = new RefreshToken(
-            stored.UserId, tokens.HashRefreshToken(newRawToken), stored.FamilyId, DateTime.UtcNow.AddDays(30));
+            stored.UserId, tokens.HashRefreshToken(newRawToken), stored.FamilyId, DateTime.UtcNow.AddDays(30),stored.DeviceInfo,current.IPAddress);
         stored.Revoke(replacement.Id);
         await users.AddRefreshTokenAsync(replacement, cancellationToken);
         var roles = RolesFor(stored.User);
@@ -65,6 +72,7 @@ public sealed class AuthService(
         if (stored?.IsActive == true)
         {
             stored.Revoke();
+            await users.AddActivityAsync(new(stored.UserId,"logout","Session signed out.",current.IPAddress,stored.DeviceInfo),cancellationToken);
             await unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
@@ -75,7 +83,7 @@ public sealed class AuthService(
         var access = tokens.CreateAccessToken(user, roles);
         var rawRefresh = tokens.CreateRefreshToken();
         await users.AddRefreshTokenAsync(new RefreshToken(
-            user.Id, tokens.HashRefreshToken(rawRefresh), familyId, DateTime.UtcNow.AddDays(30)), cancellationToken);
+            user.Id, tokens.HashRefreshToken(rawRefresh), familyId, DateTime.UtcNow.AddDays(30),null,current.IPAddress), cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return Response(user, roles, access, rawRefresh);
     }

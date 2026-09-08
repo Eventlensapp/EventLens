@@ -44,4 +44,5 @@ public sealed class ApiKey : BaseEntity
     public string KeyHash{get;private set;}=string.Empty; public DateTime? ExpiresAt{get;private set;} public DateTime? RevokedAt{get;private set;}
     public DateTime? LastUsedAt{get;private set;} public bool IsActive=>RevokedAt is null&&(ExpiresAt is null||ExpiresAt>DateTime.UtcNow);
     public void Revoke()=>RevokedAt??=DateTime.UtcNow;
+    public void MarkUsed()=>LastUsedAt=DateTime.UtcNow;
 }

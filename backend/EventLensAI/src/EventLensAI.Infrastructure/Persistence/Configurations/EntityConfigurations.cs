@@ -80,7 +80,8 @@ internal sealed class RoleConfiguration : IEntityTypeConfiguration<Role>
             Seed(SystemRoles.ViewerId, SystemRoles.Viewer),
             Seed(SystemRoles.BoothOperatorId, SystemRoles.BoothOperator),
             Seed(SystemRoles.DesignerId, SystemRoles.Designer),
-            Seed(SystemRoles.MarketingManagerId, SystemRoles.MarketingManager));
+            Seed(SystemRoles.MarketingManagerId, SystemRoles.MarketingManager),
+            Seed(SystemRoles.PlatformAdminId, SystemRoles.PlatformAdmin));
     }
     private static object Seed(Guid id, string name) => new
     {
@@ -206,14 +207,17 @@ internal sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<Refre
         b.Property(x => x.TokenHash).HasMaxLength(64).IsRequired();
         b.HasIndex(x => x.TokenHash).IsUnique();
         b.HasIndex(x => new { x.UserId, x.FamilyId });
-        b.Ignore(x => x.DeviceInfo);
-        b.Ignore(x => x.IpAddress);
-        b.Ignore(x => x.LastActivityAt);
+        b.Property(x=>x.DeviceInfo).HasMaxLength(500); b.Property(x=>x.IpAddress).HasMaxLength(64);
         b.Ignore(x => x.IsActive);
         b.HasOne(x => x.User).WithMany(x => x.RefreshTokens).HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
+
+internal sealed class UserTokenConfiguration : IEntityTypeConfiguration<UserToken>{public void Configure(EntityTypeBuilder<UserToken>b){b.ToTable("user_tokens");b.ConfigureBase();b.Property(x=>x.TokenHash).HasMaxLength(64).IsRequired();b.Property(x=>x.Purpose).HasMaxLength(30).IsRequired();b.HasIndex(x=>x.TokenHash).IsUnique();b.HasIndex(x=>new{x.UserId,x.Purpose});b.Ignore(x=>x.IsValid);b.HasOne(x=>x.User).WithMany().HasForeignKey(x=>x.UserId).OnDelete(DeleteBehavior.Cascade);}}
+internal sealed class UserPreferenceConfiguration : IEntityTypeConfiguration<UserPreference>{public void Configure(EntityTypeBuilder<UserPreference>b){b.ToTable("user_preferences");b.ConfigureBase();b.Property(x=>x.Theme).HasMaxLength(20);b.Property(x=>x.Language).HasMaxLength(10);b.HasIndex(x=>x.UserId).IsUnique();b.HasOne<User>().WithOne().HasForeignKey<UserPreference>(x=>x.UserId).OnDelete(DeleteBehavior.Cascade);}}
+internal sealed class ActivityLogConfiguration : IEntityTypeConfiguration<ActivityLog>{public void Configure(EntityTypeBuilder<ActivityLog>b){b.ToTable("activity_logs");b.ConfigureBase();b.Property(x=>x.Action).HasMaxLength(80).IsRequired();b.Property(x=>x.Description).HasMaxLength(500).IsRequired();b.Property(x=>x.IpAddress).HasMaxLength(64);b.Property(x=>x.Device).HasMaxLength(500);b.HasIndex(x=>new{x.UserId,x.CreatedAt});}}
+internal sealed class ApiKeyConfiguration : IEntityTypeConfiguration<ApiKey>{public void Configure(EntityTypeBuilder<ApiKey>b){b.ToTable("api_keys");b.ConfigureBase();b.Property(x=>x.Name).HasMaxLength(100).IsRequired();b.Property(x=>x.Prefix).HasMaxLength(20).IsRequired();b.Property(x=>x.KeyHash).HasMaxLength(64).IsRequired();b.HasIndex(x=>x.KeyHash).IsUnique();b.HasIndex(x=>x.UserId);b.Ignore(x=>x.IsActive);}}
 
 
 internal sealed class OrganizationInvitationConfiguration : IEntityTypeConfiguration<OrganizationInvitation>

@@ -27,6 +27,7 @@ const navGroups = [
   ]},
   { label: "People & access", icon: "◎", items: [
     { to: "/team", label: "Team members", icon: "◎" },
+    { to: "/account", label: "Account & security", icon: "A" },
     { to: "/departments", label: "Departments", icon: "D" },
     { to: "/branches", label: "Branches", icon: "B" },
     { to: "/access", label: "Roles & access", icon: "◆" },

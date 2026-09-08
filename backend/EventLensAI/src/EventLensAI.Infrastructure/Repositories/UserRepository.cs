@@ -27,4 +27,15 @@ internal sealed class UserRepository(EventLensDbContext context) : IUserReposito
         context.Users.AddAsync(user, cancellationToken).AsTask();
     public Task AddRefreshTokenAsync(RefreshToken refreshToken, CancellationToken cancellationToken) =>
         context.RefreshTokens.AddAsync(refreshToken, cancellationToken).AsTask();
+    public Task<UserToken?> GetUserTokenAsync(string hash,string purpose,CancellationToken ct)=>context.UserTokens.Include(x=>x.User).FirstOrDefaultAsync(x=>x.TokenHash==hash&&x.Purpose==purpose,ct);
+    public Task AddUserTokenAsync(UserToken token,CancellationToken ct)=>context.UserTokens.AddAsync(token,ct).AsTask();
+    public Task<UserPreference?> GetPreferenceAsync(Guid userId,CancellationToken ct)=>context.UserPreferences.FirstOrDefaultAsync(x=>x.UserId==userId,ct);
+    public Task AddPreferenceAsync(UserPreference preference,CancellationToken ct)=>context.UserPreferences.AddAsync(preference,ct).AsTask();
+    public async Task<IReadOnlyList<RefreshToken>> ListSessionsAsync(Guid userId,CancellationToken ct)=>await context.RefreshTokens.Where(x=>x.UserId==userId&&x.RevokedAt==null&&x.ExpiresAt>DateTime.UtcNow).OrderByDescending(x=>x.LastActivityAt).ToListAsync(ct);
+    public Task<RefreshToken?> GetSessionAsync(Guid userId,Guid id,CancellationToken ct)=>context.RefreshTokens.FirstOrDefaultAsync(x=>x.UserId==userId&&x.Id==id,ct);
+    public async Task<IReadOnlyList<ActivityLog>> ListActivityAsync(Guid userId,int take,CancellationToken ct)=>await context.ActivityLogs.Where(x=>x.UserId==userId).OrderByDescending(x=>x.CreatedAt).Take(take).ToListAsync(ct);
+    public Task AddActivityAsync(ActivityLog activity,CancellationToken ct)=>context.ActivityLogs.AddAsync(activity,ct).AsTask();
+    public async Task<IReadOnlyList<ApiKey>> ListApiKeysAsync(Guid userId,CancellationToken ct)=>await context.ApiKeys.Where(x=>x.UserId==userId).OrderByDescending(x=>x.CreatedAt).ToListAsync(ct);
+    public Task<ApiKey?> GetApiKeyAsync(Guid userId,Guid id,CancellationToken ct)=>context.ApiKeys.FirstOrDefaultAsync(x=>x.UserId==userId&&x.Id==id,ct);
+    public Task AddApiKeyAsync(ApiKey key,CancellationToken ct)=>context.ApiKeys.AddAsync(key,ct).AsTask();
 }

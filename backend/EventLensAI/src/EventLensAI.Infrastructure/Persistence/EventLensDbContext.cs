@@ -41,6 +41,10 @@ public sealed class EventLensDbContext(
     public DbSet<Gallery> Galleries => Set<Gallery>();
     public DbSet<Subscription> Subscriptions => Set<Subscription>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<UserToken> UserTokens => Set<UserToken>();
+    public DbSet<UserPreference> UserPreferences => Set<UserPreference>();
+    public DbSet<ActivityLog> ActivityLogs => Set<ActivityLog>();
+    public DbSet<ApiKey> ApiKeys => Set<ApiKey>();
     public DbSet<OrganizationInvitation> OrganizationInvitations => Set<OrganizationInvitation>();
     public DbSet<EventSettings> EventSettings => Set<EventSettings>();
     public DbSet<EventBranding> EventBranding => Set<EventBranding>();

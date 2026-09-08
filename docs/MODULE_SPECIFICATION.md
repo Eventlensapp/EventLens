@@ -64,14 +64,14 @@ All authenticated personas, platform operations staff, organization owners, invi
 | Registration | First/last name, normalized email, strong password, optional phone, duplicate prevention | Foundation present |
 | Login/logout | Credential validation, active-user check, auth event logging, session revocation | Foundation present |
 | Sessions | Short access token, random hashed rotating refresh token, family replay protection | Foundation present |
-| Verification | Time-limited one-use email verification and resend controls | Planned |
-| Password reset | Non-enumerating request, one-use token, revoke existing sessions on completion | Planned |
+| Verification | Time-limited hashed one-use email verification and neutral resend controls | Implemented; delivery provider configurable |
+| Password reset | Non-enumerating request, one-use token, revoke existing sessions on completion | Implemented; delivery provider configurable |
 | Social login | OIDC/OAuth providers linked to an existing or new user under safe collision rules | Planned |
 | MFA | Authenticator/passkey and recovery-code strategy; policy enforcement | Planned |
-| Profiles | Name, phone, image, locale, time zone, preferences, security summary | Partial |
-| API keys | Scoped, expiring, hashed credentials with last-used metadata and revocation | Planned |
-| Activity logs | User-visible sign-in/session/security activity; platform audit remains separate | Planned |
-| Roles | Platform and tenant role claims; effective permissions calculated server-side | Foundation present |
+| Profiles | Name, phone, image, locale, time zone, preferences, security summary | Implemented |
+| API keys | Expiring, hashed credentials with one-time display and revocation | Implemented; granular scopes remain part of developer-platform expansion |
+| Activity logs | User-visible sign-in/session/security activity; platform audit remains separate | Implemented |
+| Roles | Platform and tenant role claims; effective permissions calculated server-side | Implemented, including PlatformAdmin and OrganizationOwner alias |
 
 ### User workflows
 
