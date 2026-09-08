@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { AppShell } from "../components/layout/AppShell";
 import { eventApi } from "../features/events/api";
 import "../event-dashboard.css";
+import "../event-launch-actions.css";
 
 const metricMeta: Record<string, { icon: string; note: string }> = {
   PHOTOS: { icon: "▣", note: "Captured at this event" },
@@ -57,6 +58,16 @@ export default function EventDashboard() {
             ["branding", "◐", "Branding"], ["assets", "▣", "Assets"], ["qr", "⌗", "QR & access"],
           ].map(([path, icon, label]) => <Link key={path} to={`/events/${id}/${path}`}><span>{icon}</span>{label}<b>→</b></Link>)}
         </nav>
+
+        <section className="event-launch-actions" aria-label="Event launch actions">
+          <header><div><span>LAUNCH</span><h2>Guest access and booth testing</h2></div><p>The event is selected automatically.</p></header>
+          <div>
+            <Link to={`/events/${id}/qr`}><span>QR</span><strong>Generate QR codes</strong><small>Create secure guest entry links</small><b>→</b></Link>
+            <Link to={`/events/${id}/access`}><span>AC</span><strong>Public-access settings</strong><small>Control guest access and expiry</small><b>→</b></Link>
+            <Link to="/booth/session"><span>BS</span><strong>Start booth session</strong><small>Launch the operator workflow</small><b>→</b></Link>
+            <Link to="/booth/capture"><span>TC</span><strong>Test photo capture</strong><small>Verify the capture experience</small><b>→</b></Link>
+          </div>
+        </section>
 
         <div className="event-dashboard-metrics">
           {metrics.map(([label, value]) => <article key={label}>
