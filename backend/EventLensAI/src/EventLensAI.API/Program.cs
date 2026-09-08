@@ -9,6 +9,7 @@ using EventLensAI.API.Hubs;
 using EventLensAI.API.Services;
 using EventLensAI.Application.Features.AI;
 using EventLensAI.Application.Features.Analytics;
+using EventLensAI.Infrastructure.Persistence;
 
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
 try
@@ -29,6 +30,11 @@ try
     builder.Services.AddSingleton<IAnalyticsNotifier, SignalRAnalyticsNotifier>();
 
     var app = builder.Build();
+    if (app.Environment.IsDevelopment())
+    {
+        await using var seedScope = app.Services.CreateAsyncScope();
+        await seedScope.ServiceProvider.GetRequiredService<DevelopmentSuperAdminSeeder>().SeedAsync();
+    }
     app.UseMiddleware<ExceptionMiddleware>();
     app.UseMiddleware<SecurityHeadersMiddleware>();
     app.UseSerilogRequestLogging();

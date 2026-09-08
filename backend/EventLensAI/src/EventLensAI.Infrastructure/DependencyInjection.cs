@@ -42,6 +42,7 @@ public static class DependencyInjection
                 sqlServer.MigrationsAssembly(typeof(EventLensDbContext).Assembly.FullName);
                 sqlServer.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
             }));
+        services.AddScoped<DevelopmentSuperAdminSeeder>();
         services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<EventLensDbContext>());
         services.AddScoped<IUserRepository, UserRepository>();
