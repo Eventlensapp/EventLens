@@ -147,25 +147,26 @@ public static class DependencyInjection
         services.AddAuthorization(options =>
         {
             options.AddPolicy("OrganizationAdmin", policy =>
-                policy.RequireRole(SystemRoles.SuperAdmin, SystemRoles.Owner, SystemRoles.Manager));
+                policy.RequireRole(SystemRoles.SuperAdmin, SystemRoles.PlatformAdmin, SystemRoles.Owner, SystemRoles.Manager));
             options.AddPolicy("ManageEvents", policy =>
-                policy.RequireRole(SystemRoles.SuperAdmin, SystemRoles.Owner, SystemRoles.Manager));
+                policy.RequireRole(SystemRoles.SuperAdmin, SystemRoles.PlatformAdmin, SystemRoles.Owner, SystemRoles.Manager));
             options.AddPolicy("StartBooth", policy =>
-                policy.RequireRole(SystemRoles.SuperAdmin, SystemRoles.Owner, SystemRoles.Manager, SystemRoles.Photographer));
+                policy.RequireRole(SystemRoles.SuperAdmin, SystemRoles.Owner, SystemRoles.Manager, SystemRoles.Photographer, SystemRoles.BoothOperator));
             options.AddPolicy("ManageMembers", policy =>
-                policy.RequireRole(SystemRoles.SuperAdmin, SystemRoles.Owner, SystemRoles.Manager));
+                policy.RequireRole(SystemRoles.SuperAdmin, SystemRoles.PlatformAdmin, SystemRoles.Owner, SystemRoles.Manager));
             options.AddPolicy("EditTemplates", policy =>
                 policy.RequireRole(SystemRoles.SuperAdmin, SystemRoles.Owner, SystemRoles.Manager, SystemRoles.Editor, SystemRoles.Designer));
             options.AddPolicy("OrganizationRead", policy =>
-                policy.RequireRole(SystemRoles.SuperAdmin, SystemRoles.Owner, SystemRoles.Manager,
-                    SystemRoles.Photographer, SystemRoles.Editor, SystemRoles.Viewer));
+                policy.RequireRole(SystemRoles.SuperAdmin, SystemRoles.PlatformAdmin, SystemRoles.Owner, SystemRoles.Manager,
+                    SystemRoles.Photographer, SystemRoles.BoothOperator, SystemRoles.Editor, SystemRoles.Designer,
+                    SystemRoles.MarketingManager, SystemRoles.Viewer));
             options.AddPolicy("ManageCrm", policy =>
-                policy.RequireRole(SystemRoles.SuperAdmin, SystemRoles.Owner, SystemRoles.Manager, SystemRoles.MarketingManager));
+                policy.RequireRole(SystemRoles.SuperAdmin, SystemRoles.PlatformAdmin, SystemRoles.Owner, SystemRoles.Manager, SystemRoles.MarketingManager));
             options.AddPolicy("ViewAnalytics", policy =>
-                policy.RequireRole(SystemRoles.SuperAdmin, SystemRoles.Owner, SystemRoles.Manager,
-                    SystemRoles.Photographer, SystemRoles.Viewer));
+                policy.RequireRole(SystemRoles.SuperAdmin, SystemRoles.PlatformAdmin, SystemRoles.Owner, SystemRoles.Manager,
+                    SystemRoles.Photographer, SystemRoles.MarketingManager, SystemRoles.Viewer));
             options.AddPolicy("BillingOwner", policy =>
-                policy.RequireRole(SystemRoles.SuperAdmin, SystemRoles.Owner, SystemRoles.Manager));
+                policy.RequireRole(SystemRoles.SuperAdmin, SystemRoles.Owner));
             options.AddPolicy("SuperAdminOnly", policy => policy.RequireRole(SystemRoles.SuperAdmin));
         });
         return services;

@@ -5,6 +5,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { apiRequest, storageKeys } from "../../lib/api";
 import { useAppStore } from "../../store/useAppStore";
 import { CameraIcon, GalleryIcon, SparkleIcon } from "../ui/Icons";
+import { canAccessPath, roleHomeCopy } from "../../lib/access";
 import "../../sidebar-navigation.css";
 
 const navGroups = [
@@ -73,6 +74,9 @@ export function AppShell({ children, title, eyebrow }: { children: ReactNode; ti
     ["operations", "Operations"], ["venue", "Venue"], ["schedule", "Schedule"],
     ["checklist", "Checklist"], ["staff", "Staff"], ["placements", "Placements"],
   ] : [];
+  const roles = state.user?.roles ?? [];
+  const visibleGroups = navGroups.map(group => ({...group,items:group.items.filter(item=>canAccessPath(item.to,roles))})).filter(group=>group.items.length);
+  const roleCopy = roleHomeCopy[roles[0] === "OrganizationOwner" ? "Owner" : roles[0]];
 
   useEffect(() => {
     const closeMenu = (event: MouseEvent) => {
@@ -91,15 +95,15 @@ export function AppShell({ children, title, eyebrow }: { children: ReactNode; ti
     state.signOut();
   }
 
-  return <div className={state.darkMode ? "app dark" : "app light"}>
+  return <div className={`${state.darkMode ? "app dark" : "app light"} role-${(roles[0]??"guest").toLowerCase()}`}>
     <aside className={`sidebar ${state.mobileNavOpen ? "open" : ""}`}>
       <div className="sidebar-top"><Brand /><button className="mobile-close" onClick={state.closeMobileNav}>×</button></div>
       <nav className="sidebar-navigation" aria-label="Main navigation">
         <div className="sidebar-primary">
           <NavLink to="/dashboard" onClick={state.closeMobileNav} className={({ isActive }) => isActive ? "active" : ""}><span aria-hidden="true">⌂</span><b>Dashboard</b></NavLink>
-          <NavLink to="/organizations" onClick={state.closeMobileNav} className={({ isActive }) => isActive ? "active" : ""}><span aria-hidden="true">▦</span><b>Organizations</b></NavLink>
+          {canAccessPath("/organizations",roles)&&<NavLink to="/organizations" onClick={state.closeMobileNav} className={({ isActive }) => isActive ? "active" : ""}><span aria-hidden="true">▦</span><b>Organizations</b></NavLink>}
         </div>
-        {navGroups.map((group) => {
+        {visibleGroups.map((group) => {
           const containsCurrentPage = group.items.some((item) => location.pathname === item.to || location.pathname.startsWith(`${item.to}/`));
           return <details className="sidebar-nav-group" key={group.label} open={containsCurrentPage || undefined}>
             <summary><span className="sidebar-group-icon" aria-hidden="true">{group.icon}</span><b>{group.label}</b><i aria-hidden="true">⌄</i></summary>
@@ -154,8 +158,8 @@ export function AppShell({ children, title, eyebrow }: { children: ReactNode; ti
         </div>}
       </div>
     </div></header>{operationsRoute && <nav className="operations-global-tabs" aria-label="Event operations">
-      {operationsTabs.map(([path, label]) => <NavLink key={path} to={`/events/${operationsRoute[1]}/${path}`} className={operationsRoute[2] === path ? "active" : ""}>{label}</NavLink>)}
-    </nav>}<div className="content">{children}</div></main>
+      {operationsTabs.filter(([path])=>canAccessPath(`/events/${operationsRoute[1]}/${path}`,roles)).map(([path, label]) => <NavLink key={path} to={`/events/${operationsRoute[1]}/${path}`} className={operationsRoute[2] === path ? "active" : ""}>{label}</NavLink>)}
+    </nav>}{location.pathname==="/dashboard"&&roleCopy&&<section className="role-home-banner"><span>{roles.join(" · ")}</span><strong>{roleCopy.title}</strong><p>{roleCopy.description}</p></section>}<div className="content">{children}</div></main>
   </div>;
 }
 

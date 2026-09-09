@@ -1,6 +1,6 @@
 "use client";
 
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { lazy, Suspense, type ReactNode } from "react";
 import "./dark-theme.css";
 import Landing from "./pages/Landing";
@@ -65,9 +65,15 @@ const CRM = lazy(() => import("./features/crm/CRM"));
 const AnalyticsDashboard = lazy(() => import("./features/analytics/AnalyticsDashboard"));
 const BillingPortal = lazy(() => import("./features/billing/BillingPortal"));
 import { useAppStore } from "./store/useAppStore";
+import { canAccessPath } from "./lib/access";
+import AccessDenied from "./pages/AccessDenied";
 
 function Protected({ children }: { children: ReactNode }) {
-  return useAppStore((state) => state.authenticated) ? children : <Navigate to="/login" replace />;
+  const authenticated = useAppStore((state) => state.authenticated);
+  const roles = useAppStore((state) => state.user?.roles ?? []);
+  const location = useLocation();
+  if (!authenticated) return <Navigate to="/login" replace />;
+  return canAccessPath(location.pathname, roles) ? children : <Navigate to="/forbidden" replace />;
 }
 function BrandingRedirect(){const id=useAppStore(x=>x.activeOrganizationId);return id?<Navigate to={`/organizations/${id}/branding`} replace/>:<Navigate to="/organizations" replace/>}
 
@@ -83,6 +89,7 @@ export default function App() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/account" element={<Protected><AccountSettings /></Protected>} />
         <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
+        <Route path="/forbidden" element={<Protected><AccessDenied /></Protected>} />
         <Route path="/events" element={<Protected><Events /></Protected>} />
         <Route path="/events/create" element={<Protected><EventCreate /></Protected>} />
         <Route path="/events/:id" element={<Protected><EventDashboard /></Protected>} />

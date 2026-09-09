@@ -75,3 +75,6 @@
 .operations-global-tabs a{padding:11px 18px;border-radius:9px;color:var(--muted);font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap}
 .operations-global-tabs a.active{background:var(--purple);color:#fff}
 .operations-global-tabs+.content>.experience-tabs{display:none}
+.role-home-banner{margin:26px max(24px,calc((100% - 1318px)/2)) -8px;padding:16px 20px;border:1px solid rgba(139,124,255,.28);border-radius:14px;background:rgba(139,124,255,.07)}
+.role-home-banner span{color:var(--purple);font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.role-home-banner strong{display:block;margin-top:5px;font-size:17px}.role-home-banner p{margin:4px 0 0;color:var(--muted);font-size:11px}
+.role-guest .welcome-card .primary-btn,.role-viewer .welcome-card .primary-btn,.role-marketingmanager .welcome-card .primary-btn,.role-designer .welcome-card .primary-btn{display:none}
