@@ -68,10 +68,11 @@ import { useAppStore } from "./store/useAppStore";
 import { canAccessPath } from "./lib/access";
 import AccessDenied from "./pages/AccessDenied";
 import ChangeTemporaryPassword from "./pages/ChangeTemporaryPassword";
+const emptyRoles: string[] = [];
 
 function Protected({ children }: { children: ReactNode }) {
   const authenticated = useAppStore((state) => state.authenticated);
-  const roles = useAppStore((state) => state.user?.roles ?? []);
+  const roles = useAppStore((state) => state.user?.roles ?? emptyRoles);
   const mustChangePassword = useAppStore((state) => state.user?.mustChangePassword ?? false);
   const location = useLocation();
   if (!authenticated) return <Navigate to="/login" replace />;

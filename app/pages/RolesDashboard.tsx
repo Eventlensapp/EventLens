@@ -21,11 +21,12 @@ const roles: RoleDefinition[] = [
   { name: "Guest", label: "Guest", scope: "Event", summary: "Uses public event and booth experiences without staff access.", capabilities: ["Public event access", "Booth experience", "Permitted sharing"], assignable: false },
   { name: "Viewer", label: "Viewer", scope: "Organization", summary: "Receives read-only access to permitted workspace content.", capabilities: ["View assigned content", "Read reports", "No administrative changes"], assignable: true },
 ];
+const emptyRoles: string[] = [];
 
 export default function RolesDashboard() {
   const organizationId = useAppStore(state => state.activeOrganizationId);
   const organizations = useAppStore(state => state.organizations);
-  const userRoles = useAppStore(state => state.user?.roles ?? []);
+  const userRoles = useAppStore(state => state.user?.roles ?? emptyRoles);
   const organization = organizations.find(item => item.id === organizationId);
   const members = useQuery({ queryKey: ["team", organizationId], queryFn: () => teamApi.members(organizationId), enabled: !!organizationId });
   const counts = new Map<string, number>();
