@@ -40,7 +40,7 @@ public enum BoothPlacementStatus { Planned, SetupRequired, Ready, Active, Remove
 public enum EventNotificationType { TaskAssigned, TaskCompleted, ScheduleReminder, StaffAssigned, EventReminder, System }
 public enum EventQRCodeType { EventLanding, Booth, Gallery }
 public enum EventAccessAction { QRScan, PageView, SessionStart }
-public enum CaptureMode { SinglePhoto, Photo=SinglePhoto, TwoPhotoStrip, ThreePhotoStrip, FourPhotoStrip, Gif, GIF=Gif, Boomerang, ShortVideo, Video=ShortVideo, Burst, TimeLapse, LivePhoto }
+public enum CaptureMode { SinglePhoto, Photo=SinglePhoto, TwoPhotoStrip, ThreePhotoStrip, FourPhotoStrip, Gif, GIF=Gif, Boomerang, ShortVideo, Video=ShortVideo, Burst, SlowMotion, TimeLapse, LivePhoto }
 public enum MediaCaptureStatus { Recording, Processing, Completed, Failed, Cancelled }
 public enum MediaProcessingJobStatus { Queued, Processing, Completed, Failed, Cancelled }
 public enum CameraProviderType { Browser, Canon, Nikon, Sony, GenericDSLR, GenericMirrorless }
