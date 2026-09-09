@@ -1,6 +1,6 @@
 using EventLensAI.Application.Common;using EventLensAI.Application.DTOs.Organizations;using EventLensAI.Application.Services;using EventLensAI.Domain.Enums;using Microsoft.AspNetCore.Authorization;using Microsoft.AspNetCore.Mvc;
 namespace EventLensAI.API.Controllers;
-[ApiController,Authorize,Route("api/organizations/{organizationId:guid}/branding"),Produces("application/json")]
+[ApiController,Authorize(Policy="OrganizationRead"),Route("api/organizations/{organizationId:guid}/branding"),Produces("application/json")]
 public sealed class BrandingController(IBrandKitService kit,IBrandAssetService assets,IBrandThemeService themes):ControllerBase
 {
  [HttpGet]public async Task<ActionResult<ApiResponse<BrandKitDto>>>Get(Guid organizationId,CancellationToken ct)=>Ok(ApiResponse<BrandKitDto>.Ok(await kit.GetAsync(organizationId,ct)));

@@ -4,7 +4,7 @@ using EventLensAI.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace EventLensAI.API.Controllers;
-[ApiController,Authorize,Route("api/ai"),Produces("application/json")]
+[ApiController,Authorize(Policy="EditTemplates"),Route("api/ai"),Produces("application/json")]
 public sealed class AIController(IAIProcessingService service,IAIAssetService assets):ControllerBase
 {
  [HttpPost("background")]public Task<ActionResult<ApiResponse<AIJobDto>>> Background(CreateAIJobRequest request,CancellationToken ct)=>Queue(request.Background is null?AIJobType.BackgroundRemoval:AIJobType.BackgroundReplacement,request,ct);
