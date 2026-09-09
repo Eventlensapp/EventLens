@@ -10,20 +10,16 @@ namespace EventLensAI.Infrastructure.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "MustChangePassword",
-                table: "users",
-                type: "bit",
-                nullable: false,
-                defaultValue: false);
+            migrationBuilder.Sql("""
+                IF COL_LENGTH('users', 'MustChangePassword') IS NULL
+                    ALTER TABLE [users] ADD [MustChangePassword] bit NOT NULL DEFAULT CAST(0 AS bit);
+                """);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "MustChangePassword",
-                table: "users");
+            // The column may have been created by a previous schema repair, so retain it on rollback.
         }
     }
 }
