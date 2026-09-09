@@ -8,6 +8,7 @@ public interface IAccountService
     Task VerifyEmailAsync(string token,CancellationToken ct);
     Task RequestPasswordResetAsync(string email,string baseUrl,CancellationToken ct);
     Task ResetPasswordAsync(ResetPasswordRequest request,CancellationToken ct);
+    Task ChangePasswordAsync(ChangePasswordRequest request,CancellationToken ct);
     Task<ProfileDto> GetProfileAsync(CancellationToken ct);
     Task<ProfileDto> UpdateProfileAsync(UpdateProfileRequest request,CancellationToken ct);
     Task<PreferencesDto> GetPreferencesAsync(CancellationToken ct);

@@ -27,6 +27,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         b.Property(x => x.NormalizedEmail).HasMaxLength(320).IsRequired();
         b.HasIndex(x => x.NormalizedEmail).IsUnique();
         b.Property(x => x.PasswordHash).HasMaxLength(512).IsRequired();
+        b.Property(x => x.MustChangePassword).HasDefaultValue(false).IsRequired();
         b.Property(x => x.Phone).HasMaxLength(30);
         b.Property(x => x.ProfileImage).HasMaxLength(2048);
         b.Ignore(x => x.TimeZone);

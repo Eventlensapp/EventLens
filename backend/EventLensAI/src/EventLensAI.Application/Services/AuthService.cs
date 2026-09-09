@@ -97,5 +97,5 @@ public sealed class AuthService(
     private static AuthResponse Response(
         User user, IReadOnlyCollection<string> roles, AccessToken access, string refreshToken) =>
         new(access.Value, refreshToken, access.ExpiresAt,
-            new UserDto(user.Id, user.FirstName, user.LastName, user.Email, roles));
+            new UserDto(user.Id, user.FirstName, user.LastName, user.Email, roles, user.MustChangePassword));
 }

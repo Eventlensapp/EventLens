@@ -19,6 +19,7 @@ export default function Login() {
         method: "POST", body: JSON.stringify({ email: data.get("email"), password: data.get("password") }),
       });
       setSession(session);
+      if (session.user.mustChangePassword) { navigate("/change-password"); return; }
       setOrganizations(await apiRequest<Organization[]>("/api/organizations"));
       navigate("/dashboard");
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Sign in failed."); }

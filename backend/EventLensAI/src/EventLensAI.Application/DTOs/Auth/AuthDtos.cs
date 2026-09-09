@@ -11,7 +11,7 @@ public sealed record RegisterRequest(
 
 public sealed record LoginRequest(string Email, string Password);
 public sealed record RefreshTokenRequest(string? RefreshToken);
-public sealed record UserDto(Guid Id, string FirstName, string LastName, string Email, IReadOnlyCollection<string> Roles);
+public sealed record UserDto(Guid Id, string FirstName, string LastName, string Email, IReadOnlyCollection<string> Roles, bool MustChangePassword);
 public sealed record AuthResponse(
     string AccessToken,
     string RefreshToken,
@@ -20,6 +20,7 @@ public sealed record AuthResponse(
 public sealed record EmailRequest(string Email);
 public sealed record TokenRequest(string Token);
 public sealed record ResetPasswordRequest(string Token,string Password,string ConfirmPassword);
+public sealed record ChangePasswordRequest(string CurrentPassword,string Password,string ConfirmPassword);
 public sealed record UpdateProfileRequest(string FirstName,string LastName,string? Phone,string? ProfileImage,string TimeZone,string Language);
 public sealed record ProfileDto(Guid Id,string FirstName,string LastName,string Email,string? Phone,string? ProfileImage,string TimeZone,string Language,bool EmailVerified);
 public sealed record UpdatePreferencesRequest(string Theme,string Language,bool EmailNotifications,bool SecurityNotifications);

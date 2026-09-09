@@ -19,6 +19,8 @@ public sealed class AccountController(IAccountService accounts,IConfiguration co
     public async Task<ActionResult<ApiResponse<object>>>RequestReset(EmailRequest request,CancellationToken ct){await accounts.RequestPasswordResetAsync(request.Email,AppUrl,ct);return Ok(ApiResponse<object>.Ok(new{},"If the account exists, password reset instructions have been sent."));}
     [AllowAnonymous,EnableRateLimiting("authentication"),HttpPost("password-reset/confirm")]
     public async Task<ActionResult<ApiResponse<object>>>Reset(ResetPasswordRequest request,CancellationToken ct){await accounts.ResetPasswordAsync(request,ct);return Ok(ApiResponse<object>.Ok(new{},"Password reset. Sign in again."));}
+    [Authorize,HttpPost("password/change")]
+    public async Task<ActionResult<ApiResponse<object>>>ChangePassword(ChangePasswordRequest request,CancellationToken ct){await accounts.ChangePasswordAsync(request,ct);return Ok(ApiResponse<object>.Ok(new{},"Password changed. Sign in again."));}
     [Authorize,HttpGet("profile")]public async Task<ActionResult<ApiResponse<ProfileDto>>>Profile(CancellationToken ct)=>Ok(ApiResponse<ProfileDto>.Ok(await accounts.GetProfileAsync(ct)));
     [Authorize,HttpPut("profile")]public async Task<ActionResult<ApiResponse<ProfileDto>>>Profile(UpdateProfileRequest request,CancellationToken ct)=>Ok(ApiResponse<ProfileDto>.Ok(await accounts.UpdateProfileAsync(request,ct),"Profile updated."));
     [Authorize,HttpGet("preferences")]public async Task<ActionResult<ApiResponse<PreferencesDto>>>Preferences(CancellationToken ct)=>Ok(ApiResponse<PreferencesDto>.Ok(await accounts.GetPreferencesAsync(ct)));

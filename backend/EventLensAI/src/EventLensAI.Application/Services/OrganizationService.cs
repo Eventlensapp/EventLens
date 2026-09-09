@@ -10,7 +10,7 @@ namespace EventLensAI.Application.Services;
 
 public sealed class OrganizationService(
     IOrganizationRepository organizations, IAuditRepository audits,
-    IUserRepository users, ITokenService tokens, IEmailService emailService,
+    IUserRepository users, ITokenService tokens, IPasswordService passwords, IEmailService emailService,
     ICurrentUserService current, IUnitOfWork unitOfWork) : IOrganizationService
 {
     public async Task<IReadOnlyList<OrganizationDto>> ListAsync(CancellationToken ct)
@@ -113,6 +113,19 @@ public sealed class OrganizationService(
         var member=new OrganizationMember(id,user.Id,role.Id,RequireUser());await organizations.AddMemberAsync(member,ct);
         await Audit(id,AuditAction.Invite,ct);await unitOfWork.SaveChangesAsync(ct);
         return new(member.Id,user.Id,$"{user.FirstName} {user.LastName}",user.Email,role.Name,member.JoinedAt,member.Status,user.LastLoginAt);
+    }
+    public async Task<OrganizationMemberDto> CreateMemberAsync(Guid id,CreateOrganizationMemberRequest request,CancellationToken ct)
+    {
+        await RequireRole(id,[SystemRoles.Owner,SystemRoles.Manager],ct);
+        if(await users.GetByNormalizedEmailAsync(request.Email.Trim().ToUpperInvariant(),ct) is not null) throw new ConflictException("An account with this email already exists.");
+        var role=await AllowedRole(request.Role,ct);
+        if(role.Name==SystemRoles.Owner) await RequireRole(id,[SystemRoles.Owner],ct);
+        var user=new User(request.FirstName,request.LastName,request.Email,passwords.Hash(request.TemporaryPassword),null);
+        user.SetTemporaryPassword(user.PasswordHash);await users.AddUserAsync(user,ct);
+        var member=new OrganizationMember(id,user.Id,role.Id,RequireUser());await organizations.AddMemberAsync(member,ct);
+        await users.AddActivityAsync(new(user.Id,"account.created-by-admin","Account created with a temporary password.",current.IPAddress,null),ct);
+        await Audit(id,AuditAction.Invite,ct);await unitOfWork.SaveChangesAsync(ct);
+        return new(member.Id,user.Id,$"{user.FirstName} {user.LastName}",user.Email,role.Name,member.JoinedAt,member.Status,null);
     }
     public async Task RemoveMemberByUserAsync(Guid id,Guid userId,CancellationToken ct)
     {

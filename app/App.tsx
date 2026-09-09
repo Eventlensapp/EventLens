@@ -67,12 +67,15 @@ const BillingPortal = lazy(() => import("./features/billing/BillingPortal"));
 import { useAppStore } from "./store/useAppStore";
 import { canAccessPath } from "./lib/access";
 import AccessDenied from "./pages/AccessDenied";
+import ChangeTemporaryPassword from "./pages/ChangeTemporaryPassword";
 
 function Protected({ children }: { children: ReactNode }) {
   const authenticated = useAppStore((state) => state.authenticated);
   const roles = useAppStore((state) => state.user?.roles ?? []);
+  const mustChangePassword = useAppStore((state) => state.user?.mustChangePassword ?? false);
   const location = useLocation();
   if (!authenticated) return <Navigate to="/login" replace />;
+  if (mustChangePassword && location.pathname !== "/change-password") return <Navigate to="/change-password" replace />;
   return canAccessPath(location.pathname, roles) ? children : <Navigate to="/forbidden" replace />;
 }
 function BrandingRedirect(){const id=useAppStore(x=>x.activeOrganizationId);return id?<Navigate to={`/organizations/${id}/branding`} replace/>:<Navigate to="/organizations" replace/>}
@@ -87,6 +90,7 @@ export default function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/change-password" element={<Protected><ChangeTemporaryPassword /></Protected>} />
         <Route path="/account" element={<Protected><AccountSettings /></Protected>} />
         <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
         <Route path="/forbidden" element={<Protected><AccessDenied /></Protected>} />

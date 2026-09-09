@@ -4,6 +4,7 @@ using EventLensAI.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventLensAI.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(EventLensDbContext))]
-    partial class EventLensDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260909104646_AddTemporaryPasswordRequirement")]
+    partial class AddTemporaryPasswordRequirement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

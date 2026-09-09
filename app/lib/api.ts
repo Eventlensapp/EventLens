@@ -40,7 +40,7 @@ async function refreshSession(): Promise<boolean> {
 }
 
 export type AuthUser = {
-  id: string; firstName: string; lastName: string; email: string; roles: string[];
+  id: string; firstName: string; lastName: string; email: string; roles: string[]; mustChangePassword: boolean;
 };
 export type AuthSession = {
   accessToken: string; refreshToken: string; expiresAt: string; user: AuthUser;

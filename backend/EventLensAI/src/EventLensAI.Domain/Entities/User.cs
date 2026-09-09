@@ -26,6 +26,7 @@ public sealed class User : BaseEntity
     public string TimeZone { get; private set; } = "UTC";
     public string Language { get; private set; } = "en";
     public bool EmailVerified { get; private set; }
+    public bool MustChangePassword { get; private set; }
     public bool IsActive { get; private set; } = true;
     public int FailedLoginCount { get; private set; }
     public DateTime? LockoutEnd { get; private set; }
@@ -37,7 +38,8 @@ public sealed class User : BaseEntity
     public void RecordFailedLogin() { FailedLoginCount++; if (FailedLoginCount >= 5) LockoutEnd = DateTime.UtcNow.AddMinutes(15); }
     public bool IsLockedOut => LockoutEnd > DateTime.UtcNow;
     public void VerifyEmail() => EmailVerified = true;
-    public void ChangePassword(string hash) => PasswordHash = Required(hash, nameof(hash), 512);
+    public void ChangePassword(string hash) { PasswordHash = Required(hash, nameof(hash), 512); MustChangePassword = false; }
+    public void SetTemporaryPassword(string hash) { PasswordHash = Required(hash, nameof(hash), 512); MustChangePassword = true; }
     public void UpdateProfile(string firstName, string lastName, string? phone, string? image, string timeZone, string language)
     {
         FirstName = Required(firstName, nameof(firstName), 100); LastName = Required(lastName, nameof(lastName), 100);

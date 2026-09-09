@@ -18,6 +18,7 @@ public interface IOrganizationService
     Task RemoveMemberAsync(Guid id, Guid memberId, CancellationToken ct);
     Task ChangeRoleAsync(Guid id, Guid memberId, string role, CancellationToken ct);
     Task<OrganizationMemberDto> AddMemberAsync(Guid id, AddOrganizationMemberRequest request, CancellationToken ct);
+    Task<OrganizationMemberDto> CreateMemberAsync(Guid id, CreateOrganizationMemberRequest request, CancellationToken ct);
     Task RemoveMemberByUserAsync(Guid id, Guid userId, CancellationToken ct);
     Task ChangeRoleByUserAsync(Guid id, Guid userId, string role, CancellationToken ct);
     Task<IReadOnlyList<InvitationDto>> ListInvitationsAsync(Guid id, CancellationToken ct);

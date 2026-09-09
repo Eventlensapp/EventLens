@@ -23,6 +23,7 @@ internal sealed class TokenService(IOptions<JwtOptions> options) : ITokenService
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Name, $"{user.FirstName} {user.LastName}")
         };
+        claims.Add(new Claim("must_change_password", user.MustChangePassword ? "true" : "false"));
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
         var credentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key)), SecurityAlgorithms.HmacSha256);

@@ -39,6 +39,10 @@ public sealed class AddOrganizationMemberRequestValidator:AbstractValidator<AddO
 {
     public AddOrganizationMemberRequestValidator(){RuleFor(x=>x.Email).NotEmpty().EmailAddress().MaximumLength(320);RuleFor(x=>x.Role).NotEmpty().MaximumLength(50);}
 }
+public sealed class CreateOrganizationMemberRequestValidator:AbstractValidator<CreateOrganizationMemberRequest>
+{
+    public CreateOrganizationMemberRequestValidator(){RuleFor(x=>x.FirstName).NotEmpty().MaximumLength(100);RuleFor(x=>x.LastName).NotEmpty().MaximumLength(100);RuleFor(x=>x.Email).NotEmpty().EmailAddress().MaximumLength(320);RuleFor(x=>x.Role).NotEmpty().MaximumLength(50);RuleFor(x=>x.TemporaryPassword).NotEmpty().MinimumLength(12).MaximumLength(128).Matches("[A-Z]").Matches("[a-z]").Matches("[0-9]").Matches("[^a-zA-Z0-9]");}
+}
 public sealed class ChangeMemberRoleRequestValidator:AbstractValidator<ChangeMemberRoleRequest>
 {
     public ChangeMemberRoleRequestValidator(){RuleFor(x=>x.Role).NotEmpty().MaximumLength(50);}

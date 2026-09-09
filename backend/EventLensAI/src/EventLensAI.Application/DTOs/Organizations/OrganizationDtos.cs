@@ -24,5 +24,6 @@ public sealed record InvitationResponse(Guid InvitationId, string Email, string 
 public sealed record InvitationDto(Guid Id, Guid OrganizationId, string OrganizationName, string Email,
     string Role, OrganizationInvitationStatus Status, DateTime ExpiresAt, DateTime? AcceptedAt, bool UserExists);
 public sealed record AddOrganizationMemberRequest(string Email, string Role);
+public sealed record CreateOrganizationMemberRequest(string FirstName,string LastName,string Email,string TemporaryPassword,string Role);
 public sealed record ChangeMemberRoleRequest(string Role);
 public sealed record AcceptInvitationRequest(string Token);
