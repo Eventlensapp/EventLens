@@ -15,7 +15,7 @@ public enum StorageVisibility { Private, Organization, Public }
 public enum StorageScanStatus { Pending, Clean, Rejected, Failed }
 public enum EntitlementSubscriptionStatus { Trial, Active, Expired, Cancelled, Suspended, Pending }
 public enum SubscriptionStatus { Trialing, Active, PastDue, Paused, GracePeriod, Canceled, Expired }
-public enum EventType { Wedding, Birthday, Corporate, Graduation, Festival, BrandActivation, Conference, Private }
+public enum EventType { Wedding, Birthday, Corporate, Graduation, Festival, BrandActivation, Conference, Private, School, Exhibition, ProductLaunch }
 public enum EventStatus
 {
     Draft = 0,

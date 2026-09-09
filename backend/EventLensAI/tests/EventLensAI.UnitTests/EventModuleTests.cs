@@ -7,6 +7,19 @@ namespace EventLensAI.UnitTests;
 
 public sealed class EventModuleTests
 {
+    [Theory]
+    [InlineData(EventType.Wedding)]
+    [InlineData(EventType.Birthday)]
+    [InlineData(EventType.Corporate)]
+    [InlineData(EventType.Graduation)]
+    [InlineData(EventType.School)]
+    [InlineData(EventType.Exhibition)]
+    [InlineData(EventType.Festival)]
+    [InlineData(EventType.ProductLaunch)]
+    [InlineData(EventType.Conference)]
+    public void Supported_event_types_are_available_to_the_legacy_event_api(EventType type) =>
+        Assert.True(Enum.IsDefined(type));
+
     [Fact]
     public void Event_rejects_an_end_date_before_its_start_date()
     {
