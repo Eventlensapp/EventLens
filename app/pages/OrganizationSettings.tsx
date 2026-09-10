@@ -1,92 +1,29 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppShell } from "../components/layout/AppShell";
 import { organizationApi, organizationPayload } from "../features/organizations/api";
+import { brandingApi } from "../features/organizations/brandingApi";
 import { useAppStore } from "../store/useAppStore";
+import "../organization-create.css";
 
-const organizationTypes = [
-  "PhotographyStudio", "EventAgency", "WeddingPlanner", "Corporate",
-  "Education", "BrandActivation", "Venue", "Other",
-];
+const organizationTypes = ["PhotographyStudio", "EventAgency", "WeddingPlanner", "Corporate", "Education", "BrandActivation", "Venue", "Other"];
+const labelForType = (type: string) => type.replace(/([a-z])([A-Z])/g, "$1 $2");
 
 export default function OrganizationSettings() {
-  const { id = "" } = useParams();
-  const navigate = useNavigate();
-  const client = useQueryClient();
-  const store = useAppStore();
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [isArchiving, setIsArchiving] = useState(false);
-  const query = useQuery({
-    queryKey: ["organization", id],
-    queryFn: () => organizationApi.get(id),
-    enabled: !!id,
-  });
-  const update = useMutation({
-    mutationFn: (body: unknown) => organizationApi.update(id, body),
-  });
-
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError("");
-    setSuccess("");
-    try {
-      await update.mutateAsync(organizationPayload(new FormData(event.currentTarget)));
-      await client.invalidateQueries({ queryKey: ["organization", id] });
-      store.setOrganizations(await organizationApi.list());
-      setSuccess("Organization settings saved.");
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : "Update failed.");
-    }
-  }
-
-  async function archive() {
-    if (!confirm("Archive this organization?")) return;
-    setError("");
-    setSuccess("");
-    setIsArchiving(true);
-    try {
-      await organizationApi.archive(id);
-      store.setOrganizations(await organizationApi.list());
-      navigate("/organizations");
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : "Archive failed.");
-      setIsArchiving(false);
-    }
-  }
-
-  if (query.isLoading) {
-    return <AppShell title="Organization settings"><p>Loading…</p></AppShell>;
-  }
-  if (query.error || !query.data) {
-    return <AppShell title="Organization settings"><div className="form-error">{query.error?.message || "Not found."}</div></AppShell>;
-  }
-
-  const organization = query.data;
-  const isBusy = update.isPending || isArchiving;
-  return (
-    <AppShell title="Organization settings" eyebrow="Owner access">
-      <form className="event-modal" onSubmit={submit}>
-        <label>Name<input name="name" defaultValue={organization.name} required /></label>
-        <label>Type<select name="organizationType" defaultValue={organization.organizationType}>
-          {organizationTypes.map(type => <option key={type}>{type}</option>)}
-        </select></label>
-        <label>Description<textarea name="description" defaultValue={organization.description ?? ""} /></label>
-        <label>Logo URL placeholder<input name="logo" type="url" defaultValue={organization.logo ?? ""} /></label>
-        {error && <div className="form-error">{error}</div>}
-        {success && <div className="form-success" role="status">{success}</div>}
-        <div>
-          <button type="button" disabled={isBusy} onClick={() => void archive()}>
-            {isArchiving ? "Archiving…" : "Archive"}
-          </button>
-          <button type="submit" disabled={isBusy}>
-            {update.isPending ? "Saving…" : "Save changes"}
-          </button>
-        </div>
-      </form>
-    </AppShell>
-  );
+  const { id = "" } = useParams(); const navigate = useNavigate(); const client = useQueryClient(); const store = useAppStore();
+  const [error, setError] = useState(""); const [success, setSuccess] = useState(""); const [isArchiving, setIsArchiving] = useState(false); const [logoFile, setLogoFile] = useState<File | null>(null); const [logoPreview, setLogoPreview] = useState(""); const [removeLogo, setRemoveLogo] = useState(false);
+  const query = useQuery({ queryKey: ["organization", id], queryFn: () => organizationApi.get(id), enabled: !!id });
+  const update = useMutation({ mutationFn: (body: unknown) => organizationApi.update(id, body) });
+  useEffect(() => () => { if (logoPreview.startsWith("blob:")) URL.revokeObjectURL(logoPreview); }, [logoPreview]);
+  function selectLogo(event: ChangeEvent<HTMLInputElement>) { const file = event.target.files?.[0] ?? null; if (logoPreview.startsWith("blob:")) URL.revokeObjectURL(logoPreview); setLogoFile(file); setRemoveLogo(false); setLogoPreview(file ? URL.createObjectURL(file) : ""); }
+  function removeSelectedLogo() { if (logoPreview.startsWith("blob:")) URL.revokeObjectURL(logoPreview); setLogoFile(null); setLogoPreview(""); setRemoveLogo(true); }
+  async function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); if (!query.data) return; setError(""); setSuccess(""); try { const payload = { ...organizationPayload(new FormData(event.currentTarget)), logo: removeLogo ? null : query.data.logo }; if (logoFile) { const kit = await brandingApi.logo(id, "Primary", logoFile); payload.logo = kit.logos.primary; } else if (removeLogo) await brandingApi.removeLogo(id, "Primary"); await update.mutateAsync(payload); await client.invalidateQueries({ queryKey: ["organization", id] }); store.setOrganizations(await organizationApi.list()); setLogoFile(null); setRemoveLogo(false); setLogoPreview(""); setSuccess("Organization settings saved."); } catch (reason) { setError(reason instanceof Error ? reason.message : "Update failed."); } }
+  async function archive() { if (!confirm("Archive this organization?")) return; setError(""); setSuccess(""); setIsArchiving(true); try { await organizationApi.archive(id); store.setOrganizations(await organizationApi.list()); navigate("/organizations"); } catch (reason) { setError(reason instanceof Error ? reason.message : "Archive failed."); setIsArchiving(false); } }
+  if (query.isLoading) return <AppShell title="Organization settings"><p>Loading...</p></AppShell>;
+  if (query.error || !query.data) return <AppShell title="Organization settings"><div className="form-error">{query.error?.message || "Not found."}</div></AppShell>;
+  const organization = query.data; const currentPreview = logoPreview || (!removeLogo ? organization.logo || "" : ""); const busy = update.isPending || isArchiving;
+  return <AppShell title="Organization settings" eyebrow="Owner access"><main className="organization-create-page organization-settings-page"><section className="organization-create-intro"><span className="organization-create-icon" aria-hidden="true">⚙</span><div><span className="organization-create-eyebrow">WORKSPACE CONTROL</span><h2>Organization settings</h2><p>Keep workspace details and your primary brand logo current.</p></div></section><form className="organization-create-form" onSubmit={submit}><section className="organization-form-section"><div className="organization-section-heading"><span>01</span><div><h3>Organization details</h3><p>Changes are visible throughout this workspace.</p></div></div><label className="organization-field organization-field-wide"><span>Name <b>Required</b></span><input name="name" defaultValue={organization.name} required /></label><label className="organization-field organization-field-wide"><span>Organization type</span><select name="organizationType" defaultValue={organization.organizationType}>{organizationTypes.map(type => <option key={type} value={type}>{labelForType(type)}</option>)}</select></label><label className="organization-field organization-field-wide"><span>Description <em>Optional</em></span><textarea name="description" defaultValue={organization.description ?? ""} maxLength={4000} /></label></section><section className="organization-form-section organization-brand-section"><div className="organization-section-heading"><span>02</span><div><h3>Primary logo</h3><p>This logo is used for your organization and Brand Kit.</p></div></div><div className="organization-logo-upload organization-field-wide"><div className="organization-logo-preview">{currentPreview ? <img src={currentPreview} alt="Organization logo" /> : <span aria-hidden="true">✦</span>}</div><div><span>Organization logo <em>Optional</em></span><p>PNG, JPG, WEBP or SVG · up to 10 MB</p><label className="organization-logo-picker"><input type="file" accept=".png,.jpg,.jpeg,.webp,.svg,image/png,image/jpeg,image/webp,image/svg+xml" onChange={selectLogo} disabled={busy} /><span>{currentPreview ? "Replace logo" : "Choose logo"}</span></label>{logoFile && <small>{logoFile.name} · {(logoFile.size / 1024 / 1024).toFixed(1)} MB</small>}</div>{currentPreview && <button className="organization-logo-remove" type="button" onClick={removeSelectedLogo} disabled={busy}>Remove</button>}</div></section>{error && <div className="form-error" role="alert">{error}</div>}{success && <div className="form-success" role="status">{success}</div>}<footer className="organization-create-actions"><p>Logo changes are stored securely in your Brand Kit.</p><div><button type="button" disabled={busy} onClick={() => void archive()}>{isArchiving ? "Archiving..." : "Archive"}</button><button type="submit" disabled={busy}>{update.isPending ? "Saving..." : "Save changes"}</button></div></footer></form></main></AppShell>;
 }
